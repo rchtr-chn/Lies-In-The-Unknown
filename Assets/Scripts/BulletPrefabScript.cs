@@ -30,7 +30,7 @@ public class BulletPrefabScript : MonoBehaviour
         Vector3 rotaion = transform.position - mousePos;
         rb.velocity = direction * force;
         float angle = Mathf.Atan2(rotaion.y, rotaion.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90)); // Adjust rotation to face the mouse position
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle)); // Adjust rotation to face the mouse position
     }
 
     float GetDamage()
@@ -47,5 +47,20 @@ public class BulletPrefabScript : MonoBehaviour
         {
             return Random.Range(0f, 2f);
         }
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // Assuming the enemy has a script with a TakeDamage method
+            //EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
+            //if (enemyScript != null)
+            //{
+            //    enemyScript.TakeDamage(damage);
+            //}
+        }
+        Destroy(gameObject); // Destroy the bullet on collision
     }
 }

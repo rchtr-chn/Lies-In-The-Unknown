@@ -49,6 +49,8 @@ public class StaminaBarScript : MonoBehaviour
 
     IEnumerator RegenerateBar()
     {
+        yield return new WaitForSeconds(0.7f); // Wait for 1 second before starting regeneration
+
         float elapsedTime = 0f; // Time elapsed since the start of the coroutine
         float duration = 1.5f; // Duration to fill the stamina bar
 
@@ -57,7 +59,7 @@ public class StaminaBarScript : MonoBehaviour
         {
             staminaBar.value = Mathf.Lerp(0f, 100f, Mathf.Clamp01(elapsedTime / duration));
             elapsedTime += Time.deltaTime;
-            Debug.Log(staminaBar.value);
+            //Debug.Log(staminaBar.value);
             yield return null; // Wait for the next frame
         }
 
