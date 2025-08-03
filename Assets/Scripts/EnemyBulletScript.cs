@@ -30,7 +30,7 @@ public class EnemyBulletScript : MonoBehaviour
     {
         if(bossHealthManager.isEnraged)
         {
-            bulletForce = 60f; // Increase bullet speed when the boss is enraged
+            bulletForce = 50f; // Increase bullet speed when the boss is enraged
         }
 
         Vector2 direction = (playerPos - (Vector2)transform.position).normalized;

@@ -65,5 +65,13 @@ public class BossHealthManager : MonoBehaviour
         gameObject.SetActive(false); // Disable the Oni game object
         Debug.Log("Oni is dead!");
         // Handle death logic here, e.g., play animation, disable game object, etc.}
+        if(gameObject.name == "Oni-boss")
+        {
+            LevelManagerScript levelManager = FindObjectOfType<LevelManagerScript>();
+            if (levelManager != null)
+            {
+                levelManager.InitiateSecondLevel(); // Call the method to initiate the second level
+            }
+        }
     }
 }

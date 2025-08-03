@@ -13,6 +13,8 @@ public class BulletPrefabScript : MonoBehaviour
     public float force = 5f;
     bool isFullCharge = false; // Track if the bullet is fully charged
 
+    public LayerMask environmentLayer;
+
     StaminaBarScript staminaBarScript;
 
     private void Start()
@@ -74,6 +76,10 @@ public class BulletPrefabScript : MonoBehaviour
                 Debug.Log("Enemy does not have a BossHealthManager component.");
             }
         }
-        Destroy(gameObject);
+        if(col.gameObject.layer == LayerMask.NameToLayer("Environment") || col.gameObject.CompareTag("Enemy"))
+        {
+            // If the bullet hits an environment object, destroy the bullet
+            Destroy(gameObject);
+        }
     }
 }

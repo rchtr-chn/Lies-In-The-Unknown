@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OniEnemyBehaviorScript : MonoBehaviour
 {
@@ -27,10 +28,17 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     BossHealthManager bossHealthManager;
     Coroutine stunCoroutine;
     bool isStunned = false;
-    float stunDuration = 3f; // Duration of the stun effect
+    public float stunDuration = 5f; // Duration of the stun effect
+
+    Slider shieldBar; // Reference to the shield bar for the Oni
 
     private void Start()
     {
+        if(shieldBar == null)
+        {
+            shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
+        }
+
         if (!oniSr)
         {
             oniSr = GetComponent<SpriteRenderer>();
@@ -143,7 +151,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
         isStunned = true;
         yield return new WaitForSeconds(stunDuration);
         isStunned = false;
-        bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
+        shieldBar.value = bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
         Debug.Log("Oni is no longer stunned.");
 
         stunCoroutine = null; // Reset stun coroutine reference

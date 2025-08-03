@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnknownEnemyBehaviorscript : MonoBehaviour
 {
@@ -21,7 +22,9 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     Coroutine teleportCoroutine;
     Coroutine fadeCoroutine;
     Coroutine barrageCoroutine;
+    Coroutine stunCoroutine; // Coroutine for handling stun effect
 
+    public float stunDuration = 5f; // Duration of the stun effect
     bool isStunned = false; // Flag to check if the enemy is stunned
     bool isFading = false; // Flag to check if the enemy is currently fading
     bool isEnraged = false; // Flag to check if the enemy is enraged
@@ -31,12 +34,17 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     bool fadeOut = true; // Set to true for fade out, false for fade in
 
     BossHealthManager bossHealthManager;
+    Slider shieldBar;
 
     private void Start()
     {
         if (!bossHealthManager)
         {
             bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
+        }
+        if(!shieldBar)
+        {
+            shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
 
         if (!spriteRenderer)
@@ -59,6 +67,11 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             Debug.Log("Boss is enraged!");
             bossHealthManager.isEnraged = true;
             Enraged(); // Call the method to handle enraged state
+        }
+
+        if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null)
+        {
+            stunCoroutine = StartCoroutine(StunEnemy(stunDuration));
         }
     }
 
@@ -92,6 +105,27 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             fadeCoroutine = StartCoroutine(FadeSprite());
             isFading = false; // Reset fading flag
         }
+    }
+
+    IEnumerator StunEnemy(float stunDuration)
+    {
+        if(barrageCoroutine != null)
+        {
+            StopCoroutine(barrageCoroutine);
+            barrageCoroutine = null; // Reset barrage coroutine reference
+            foreach (SpriteRenderer sr in barrageSpritePlaceholder)
+            {
+                sr.sprite = null; // Clear barrage sprites when stunned
+            }
+        }
+
+        isStunned = true;
+        yield return new WaitForSeconds(stunDuration);
+        isStunned = false;
+        shieldBar.value = bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
+        Debug.Log("Oni is no longer stunned.");
+
+        stunCoroutine = null; // Reset stun coroutine reference
     }
 
     IEnumerator FadeSprite()
@@ -147,7 +181,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
                 barrageSpritePlaceholder[index].sprite = null;
                 index++;
             }
-            yield return new WaitForSeconds(0.3f); // Wait before the next barrage attack
+            yield return new WaitForSeconds(0.5f); // Wait before the next barrage attack
         }
 
         yield return null;
@@ -158,9 +192,9 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     {
         spriteRenderer.color = Color.red; // Change the sprite color to red when enraged
         intervalBetweenTeleports = 5f; // Decrease teleport interval when enraged
-        attackCooldown = 1.5f; // Decrease attack cooldown when enraged
+        attackCooldown = 2f; // Decrease attack cooldown when enraged
         isEnraged = true; // Set the enraged flag to true
-        barrageCount = 3; // Increase barrage count when enraged
+        barrageCount = 2; // Increase barrage count when enraged
     }
 
 }

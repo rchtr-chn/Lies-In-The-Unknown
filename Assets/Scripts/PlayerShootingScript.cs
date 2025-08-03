@@ -7,9 +7,14 @@ public class PlayerShootingScript : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public StaminaBarScript staminaBarScript;
+    public Animator animator;
 
     private void Start()
     {
+        if (!animator)
+        {
+            animator = GameObject.Find("Player").GetComponent<Animator>();
+        }
         if (!staminaBarScript)
         {
             staminaBarScript = GameObject.Find("stamina-bar").GetComponent<StaminaBarScript>();
@@ -17,6 +22,18 @@ public class PlayerShootingScript : MonoBehaviour
         if (!bulletPrefab)
         {
             bulletPrefab = Resources.Load<GameObject>("Prefabs/Player/Bullet");
+        }
+    }
+
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("LMBinputted", true);
+        }
+        else
+        {
+            animator.SetBool("LMBinputted", false);
         }
     }
 

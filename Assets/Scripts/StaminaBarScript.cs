@@ -75,7 +75,7 @@ public class StaminaBarScript : MonoBehaviour
 
     void AdjustPosition()
     {
-        Vector2 worldPos = player.transform.position + new Vector3(-2.25f, 1f, 0);
+        Vector2 worldPos = player.transform.position + new Vector3(-2.25f, 2f, 0);
         Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos); // Convert world position to screen position
 
         rectTransform.position = screenPos; // Set the position of the UI element

@@ -11,9 +11,14 @@ public class PlayerMovementScript : MonoBehaviour
     bool isGrounded = false;
     SpriteRenderer sr;
     Rigidbody2D rb;
+    public Animator animator;
 
     private void Start()
     {
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+        }
         if (!rb)
             rb = GetComponent<Rigidbody2D>();
         if (!sr)
@@ -26,19 +31,21 @@ public class PlayerMovementScript : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(horizontalInput * speed, rb.velocity.y);
+        
+        animator.SetFloat("velocity", rb.velocity.magnitude);
     }
 
     void flipSprite()
     {
         if (sr)
         {
-            if (sr.flipX && speed > 0)
+            if (rb.velocity.x < 0)
             {
-                sr.flipX = false;
+                sr.flipX = false; // Facing right
             }
-            else if (!sr.flipX && speed < 0)
+            else if (rb.velocity.x > 0)
             {
-                sr.flipX = true;
+                sr.flipX = true; // Facing left
             }
         }
     }
