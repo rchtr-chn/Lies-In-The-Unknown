@@ -10,6 +10,8 @@ public class LevelManagerScript : MonoBehaviour
     public GameObject firstBoss;
     public GameObject secondBoss;
 
+    public GameObject levelOneBG;
+
     public GameObject blackImage;
     public float fadeDuration = 1.5f;
     Coroutine fadeCoroutine;
@@ -22,7 +24,11 @@ public class LevelManagerScript : MonoBehaviour
 
     private void Awake()
     {
-        if(blackImage == null)
+        if(levelOneBG == null)
+        {
+            levelOneBG = GameObject.Find("background-1");
+        }
+        if (blackImage == null)
         {
             blackImage = GameObject.Find("BlackImage");
         }
@@ -43,6 +49,7 @@ public class LevelManagerScript : MonoBehaviour
 
     public void InitiateSecondLevel()
     {
+        levelOneBG.SetActive(false);
         UpdateBossHealthBar();
         UpdatePlayerHealthBar();
 

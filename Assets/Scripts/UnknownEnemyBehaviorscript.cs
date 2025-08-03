@@ -126,12 +126,18 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         if(teleportCoroutine != null)
         {
             StopCoroutine(teleportCoroutine);
+            if(spriteRenderer.color.a < 1f)
+            {
+                fadeOut = true; // Set to true for fade out before stun
+                fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+            }
             teleportCoroutine = null; // Reset teleport coroutine reference
         }
 
         isStunned = true;
         yield return new WaitForSeconds(stunDuration);
         isStunned = false;
+        teleportCoroutine = StartCoroutine(TeleportRandomly()); // Restart teleport coroutine after stun
         shieldBar.value = bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
         Debug.Log("Oni is no longer stunned.");
 
