@@ -19,9 +19,6 @@ public class BossHealthManager : MonoBehaviour
 
     private void Start()
     {
-        healthBar.maxValue = health = maxHealth;
-        shieldBar.maxValue = shield = maxShield;
-
         if (healthBar == null)
         {
             healthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
@@ -30,6 +27,9 @@ public class BossHealthManager : MonoBehaviour
         {
             shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
+
+        healthBar.maxValue = health = maxHealth;
+        shieldBar.maxValue = shield = maxShield;
     }
 
     private void Update()

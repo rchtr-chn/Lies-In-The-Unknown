@@ -153,5 +153,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     {
         bossHealthManager.shieldBar.maxValue = bossHealthManager.shield = bossHealthManager.maxShield = 50;
         oniSr.color = Color.red; // Change color to indicate enraged state
+        maxDistanceToChase = 20f;
+        bossSpeed = 3f;
     }
 }

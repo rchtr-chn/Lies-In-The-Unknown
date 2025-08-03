@@ -8,6 +8,7 @@ TagManager:
   - Enemy_Attack
   - Player_Attack
   - Enemy
+  - Enemy_boss
   layers:
   - Default
   - TransparentFX

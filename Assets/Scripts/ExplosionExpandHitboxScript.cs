@@ -15,7 +15,7 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
     private void Start()
     {
         if(!bossHealthManager)
-            bossHealthManager = GameObject.Find("Oni-boss").GetComponent<BossHealthManager>();
+            bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
 
         if (!boxCollider)
             boxCollider = GetComponent<BoxCollider2D>();

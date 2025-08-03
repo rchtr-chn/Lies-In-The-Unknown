@@ -19,7 +19,7 @@ public class EnemyBulletScript : MonoBehaviour
     {
         if (!bossHealthManager)
         {
-            bossHealthManager = GameObject.Find("Oni-boss").GetComponent<BossHealthManager>();
+            bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
         }
 
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
@@ -35,6 +35,12 @@ public class EnemyBulletScript : MonoBehaviour
 
         Vector2 direction = (playerPos - (Vector2)transform.position).normalized;
         Vector3 rotation = transform.position - (Vector3)playerPos;
+
+        //gets random pos around playerPos for inaccuracy in attack to make it seem natural
+        float randomX = Random.Range(playerPos.x - 0.2f, playerPos.x + 0.2f);
+        float randomY = Random.Range(playerPos.y - 0.2f, playerPos.y + 0.2f);
+        playerPos = new Vector2(randomX, randomY);
+
         transform.position = Vector2.MoveTowards(transform.position, playerPos, bulletForce * Time.deltaTime);
 
         float angle = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
