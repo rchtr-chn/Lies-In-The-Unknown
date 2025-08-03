@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ExplosionExpandHitboxScript : MonoBehaviour
@@ -7,13 +8,27 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
     public BoxCollider2D boxCollider;
     public Vector2 targetSize = new Vector2(4f, 4f);
     public float duration = 2f;
+    public float explosionDamage = 25f;
+
+    BossHealthManager bossHealthManager;
 
     private void Start()
     {
+        if(!bossHealthManager)
+            bossHealthManager = GameObject.Find("Oni-boss").GetComponent<BossHealthManager>();
+
         if (!boxCollider)
             boxCollider = GetComponent<BoxCollider2D>();
 
         StartCoroutine(ExpandOverTime());
+    }
+
+    private void Update()
+    {
+        if(bossHealthManager.isEnraged)
+        {
+            explosionDamage = 50f; // Increase explosion damage when the boss is enraged
+        }
     }
 
     private IEnumerator ExpandOverTime()
@@ -30,5 +45,18 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
         }
 
         boxCollider.size = targetSize; // Ensure final size
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.CompareTag("Player"))
+        {
+            PlayerHealthManager playerHealthManager = col.gameObject.GetComponentInParent<PlayerHealthManager>();
+            if (playerHealthManager != null)
+            {
+                // Assuming the explosion deals full damage
+                playerHealthManager.TakeDamage(Mathf.FloorToInt(explosionDamage));
+            }
+        }
     }
 }

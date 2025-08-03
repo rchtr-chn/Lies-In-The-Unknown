@@ -13,14 +13,26 @@ public class EnemyBulletScript : MonoBehaviour
 
     Vector2 playerPos;
 
+    BossHealthManager bossHealthManager;
+
     private void Start()
     {
+        if (!bossHealthManager)
+        {
+            bossHealthManager = GameObject.Find("Oni-boss").GetComponent<BossHealthManager>();
+        }
+
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         playerPos = playerTransform.position;
         rb = GetComponent<Rigidbody2D>();
     }
     private void Update()
     {
+        if(bossHealthManager.isEnraged)
+        {
+            bulletForce = 60f; // Increase bullet speed when the boss is enraged
+        }
+
         Vector2 direction = (playerPos - (Vector2)transform.position).normalized;
         Vector3 rotation = transform.position - (Vector3)playerPos;
         transform.position = Vector2.MoveTowards(transform.position, playerPos, bulletForce * Time.deltaTime);

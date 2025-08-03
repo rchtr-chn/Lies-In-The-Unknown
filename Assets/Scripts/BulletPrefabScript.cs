@@ -11,6 +11,9 @@ public class BulletPrefabScript : MonoBehaviour
     Rigidbody2D rb;
     float damage;
     public float force = 5f;
+    bool isFullCharge = false; // Track if the bullet is fully charged
+
+    StaminaBarScript staminaBarScript;
 
     private void Start()
     {
@@ -18,11 +21,15 @@ public class BulletPrefabScript : MonoBehaviour
         {
             staminaBar = GameObject.Find("stamina-bar").GetComponent<Slider>();
         }
+        if(!staminaBarScript)
+        {
+            staminaBarScript = GameObject.Find("stamina-bar").GetComponent<StaminaBarScript>();
+        }
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
 
         damage = GetDamage();
-
+        staminaBarScript.DepleteBar(); // Deplete the stamina bar when the bullet is fired
 
         mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0; // Ensure z is zero for 2D
@@ -37,30 +44,36 @@ public class BulletPrefabScript : MonoBehaviour
     {
         if(staminaBar.value >= 99.9f)
         {
+            isFullCharge = true; // Set full charge state if stamina is full
             return 10f;
-        }
-        else if (staminaBar.value >= 66.6f)
-        {
-            return 3.5f;
         }
         else
         {
-            return Random.Range(0f, 2f);
+            return Random.Range(0f, 3.5f);
         }
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (col.gameObject.CompareTag("Enemy"))
         {
-            // Assuming the enemy has a script with a TakeDamage method
-            //EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
-            //if (enemyScript != null)
-            //{
-            //    enemyScript.TakeDamage(damage);
-            //}
+            BossHealthManager enemyHealthManager = col.gameObject.GetComponentInParent<BossHealthManager>();
+            if (enemyHealthManager != null)
+            {
+                Debug.Log("Enemy hit with damage: " + damage);
+                enemyHealthManager.TakeDamage(Mathf.FloorToInt(damage), isFullCharge);
+
+                if (isFullCharge)
+                {
+                    isFullCharge = false; // Reset the full charge state after dealing damage
+                }
+            }
+            else
+            {
+                Debug.Log("Enemy does not have a BossHealthManager component.");
+            }
         }
-        Destroy(gameObject); // Destroy the bullet on collision
+        Destroy(gameObject);
     }
 }

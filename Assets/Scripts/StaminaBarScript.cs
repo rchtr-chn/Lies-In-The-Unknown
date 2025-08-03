@@ -30,6 +30,8 @@ public class StaminaBarScript : MonoBehaviour
         {
             regenerationCoroutine = StartCoroutine(RegenerateBar());
         }
+
+        RecolorFill();
     }
 
     private void LateUpdate()
@@ -58,6 +60,9 @@ public class StaminaBarScript : MonoBehaviour
         while (staminaBar.value < staminaBar.maxValue)
         {
             staminaBar.value = Mathf.Lerp(0f, 100f, Mathf.Clamp01(elapsedTime / duration));
+
+            staminaBar.fillRect.GetComponent<Image>().color = Color.Lerp(Color.red, Color.white, elapsedTime / duration); // Change color from red to yellow as it fills
+
             elapsedTime += Time.deltaTime;
             //Debug.Log(staminaBar.value);
             yield return null; // Wait for the next frame
@@ -70,9 +75,22 @@ public class StaminaBarScript : MonoBehaviour
 
     void AdjustPosition()
     {
-        Vector2 worldPos = player.transform.position + new Vector3(-1, 0.5f, 0);
+        Vector2 worldPos = player.transform.position + new Vector3(-2.25f, 1f, 0);
         Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos); // Convert world position to screen position
 
         rectTransform.position = screenPos; // Set the position of the UI element
+    }
+
+
+    void RecolorFill()
+    {
+        if (staminaBar.value <= 1)
+        {
+            staminaBar.fillRect.GetComponent<Image>().color = Color.red; // Change color to red when depleted
+        }
+        if(staminaBar.value == 100)
+        {
+            staminaBar.fillRect.GetComponent<Image>().color = Color.yellow;
+        }
     }
 }

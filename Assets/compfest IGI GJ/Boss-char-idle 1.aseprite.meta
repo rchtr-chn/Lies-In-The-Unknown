@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b5abf9f5c9af406458fca3d9fde0173d
+guid: 26f9986ff4fed924d801d8ea5f8720ec
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -35,7 +35,7 @@ ScriptedImporter:
     spriteMeshType: 1
     alignment: 0
     spritePivot: {x: 0.5, y: 0.5}
-    spritePixelsToUnits: 100
+    spritePixelsToUnits: 16
     spriteBorder: {x: 0, y: 0, z: 0, w: 0}
     spriteGenerateFallbackPhysicsShape: 0
     generateCubemap: 6
@@ -97,7 +97,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 0
+  platformSettingsDirtyTick: 638898146701995116
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -121,18 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Tutorial_Frame_0
+  - name: Boss-char-idle 1_Frame_0
     originalName: 
-    pivot: {x: 0.50000006, y: -0.045454547}
+    pivot: {x: 0.47222227, y: -0.09876544}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 78
-      height: 44
-    spriteID: ce170f3c0a3024242b29933d7f5fb82d
+      width: 108
+      height: 243
+    spriteID: f3fca7b9f324d34459003edbc1cb3d29
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -141,18 +141,18 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: Tutorial_Frame_1
+  - name: Boss-char-idle 1_Frame_1
     originalName: 
-    pivot: {x: 0.50000006, y: -0.045454547}
+    pivot: {x: 0.47222227, y: -0.075}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 56
-      width: 78
-      height: 44
-    spriteID: 0704c210c9509614f8b29644fdcf36b9
+      y: 255
+      width: 108
+      height: 240
+    spriteID: 346994621386bc94b8ffbcb44226f9ea
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -160,36 +160,128 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 56}
+    uvTransform: {x: 4, y: 255}
+  - name: Boss-char-idle 1_Frame_2
+    originalName: 
+    pivot: {x: 0.47222227, y: -0.06410257}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 120
+      y: 252
+      width: 108
+      height: 234
+    spriteID: 7a831214c08eee543b461977f1378344
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 120, y: 252}
+  - name: Boss-char-idle 1_Frame_3
+    originalName: 
+    pivot: {x: 0.47222227, y: -0.075}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 120
+      y: 4
+      width: 108
+      height: 240
+    spriteID: 3495a8e940259cd4383b90e854b81406
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 120, y: 4}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1238241496
-    name: Tutorial
+    guid: -30731116
+    name: Boss-char-idle 1
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Tutorial_Frame_0
+    - name: Boss-char-idle 1_Frame_0
       frameIndex: 0
       cellRect:
-        x: 1
-        y: 2
-        width: 78
-        height: 44
-      spriteId: ce170f3c0a3024242b29933d7f5fb82d
-    - name: Tutorial_Frame_1
+        x: 9
+        y: 24
+        width: 108
+        height: 243
+      spriteId: f3fca7b9f324d34459003edbc1cb3d29
+    - name: Boss-char-idle 1_Frame_1
       frameIndex: 1
       cellRect:
-        x: 1
-        y: 2
-        width: 78
-        height: 44
-      spriteId: 0704c210c9509614f8b29644fdcf36b9
+        x: 9
+        y: 18
+        width: 108
+        height: 240
+      spriteId: 346994621386bc94b8ffbcb44226f9ea
+    - name: Boss-char-idle 1_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 9
+        y: 15
+        width: 108
+        height: 234
+      spriteId: 7a831214c08eee543b461977f1378344
+    - name: Boss-char-idle 1_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 9
+        y: 18
+        width: 108
+        height: 240
+      spriteId: 3495a8e940259cd4383b90e854b81406
     linkedCells: []
     parentIndex: -1
-  platformSettings: []
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Server
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 80, y: 48}
+  canvasSize: {x: 120, y: 270}

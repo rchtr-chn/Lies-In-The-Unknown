@@ -27,7 +27,6 @@ public class PlayerShootingScript : MonoBehaviour
             if (bulletPrefab)
             {
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                staminaBarScript.DepleteBar(); // Deplete stamina when shooting
             }
             else
             {

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cef88c8efaddd474ba62f8a67b4fc86e
+guid: 6c94da996f2aa1c48b79bd83ec2f94fc
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -121,18 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Tile
+  - name: MAIN UI
     originalName: 
-    pivot: {x: 4, y: -6}
+    pivot: {x: 0.5186722, y: -0.051282056}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 16
-      height: 16
-    spriteID: babf5bd0936ffb0439194639bcf1023a
+      width: 241
+      height: 117
+    spriteID: df5c9e3e716dcc146aed69d03acdfd4d
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -144,24 +144,24 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1753976414
-    name: Tile
+    guid: 558828103
+    name: MAIN UI
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Tile
+    - name: MAIN UI
       frameIndex: 0
       cellRect:
-        x: 0
-        y: 96
-        width: 16
-        height: 16
-      spriteId: babf5bd0936ffb0439194639bcf1023a
+        x: 3
+        y: 6
+        width: 241
+        height: 117
+      spriteId: df5c9e3e716dcc146aed69d03acdfd4d
     linkedCells: []
     parentIndex: -1
   platformSettings: []
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 128, y: 128}
+  canvasSize: {x: 256, y: 128}
