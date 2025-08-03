@@ -14,6 +14,10 @@ public class LevelManagerScript : MonoBehaviour
     public float fadeDuration = 1.5f;
     Coroutine fadeCoroutine;
 
+    public Slider bossHealthBar;
+    public Slider bossShieldBar;
+    public Slider playerHealthBar;
+
     public Transform playerTransform;
 
     private void Awake()
@@ -31,7 +35,7 @@ public class LevelManagerScript : MonoBehaviour
         {
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         }
-        playerTransform.position = new Vector2(0, -2);
+        playerTransform.position = new Vector2(0, -1.5f);
 
         levelOne.SetActive(true);
         firstBoss.SetActive(true);
@@ -39,9 +43,12 @@ public class LevelManagerScript : MonoBehaviour
 
     public void InitiateSecondLevel()
     {
+        UpdateBossHealthBar();
+        UpdatePlayerHealthBar();
+
         blackImage.SetActive(true);
 
-        playerTransform.position = new Vector2(0, -2);
+        playerTransform.position = new Vector2(0, -1.5f);
 
         levelOne.SetActive(false);
         levelTwo.SetActive(true);
@@ -78,5 +85,38 @@ public class LevelManagerScript : MonoBehaviour
             StopCoroutine(fadeCoroutine);
             fadeCoroutine = null; // Reset coroutine reference
         }
+    }
+
+    void UpdateBossHealthBar()
+    {
+        if (bossHealthBar == null)
+        {
+            bossHealthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
+        }
+        if (bossShieldBar == null)
+        {
+            bossShieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
+        }
+
+        BossHealthManager bossHealthScript = secondBoss.GetComponent<BossHealthManager>();
+
+        bossHealthBar.maxValue = bossHealthScript.maxHealth;
+        bossShieldBar.maxValue = bossHealthScript.maxShield;
+        bossHealthBar.value = bossHealthBar.maxValue;
+        bossShieldBar.value = bossShieldBar.maxValue;
+
+        Debug.Log("Boss health and shield bars updated.");
+    }
+
+    void UpdatePlayerHealthBar()
+    {
+        if (playerHealthBar == null)
+        {
+            playerHealthBar = GameObject.Find("player-healthBar").GetComponent<Slider>();
+        }
+        PlayerHealthManager playerHealthScript = playerTransform.GetComponent<PlayerHealthManager>();
+        playerHealthBar.maxValue = playerHealthScript.maxHealth;
+        playerHealthBar.value = playerHealthScript.maxHealth;
+        Debug.Log("Player health bar updated.");
     }
 }

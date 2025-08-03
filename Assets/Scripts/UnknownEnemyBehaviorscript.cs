@@ -11,6 +11,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
     public Sprite barrageBulletSprite;
     public GameObject barrageBulletPrefab; // Prefab for the barrage bullet
+    public GameObject acceptOrRejectGroup;
 
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer[] barrageSpritePlaceholder;
@@ -62,16 +63,20 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             barrageCoroutine = StartCoroutine(BarrageAttack());
         }
 
-        if(bossHealthManager.health < bossHealthManager.enragedMinimum && !bossHealthManager.isEnraged)
+        if(bossHealthManager.health <= bossHealthManager.enragedMinimum && !bossHealthManager.isEnraged)
         {
             Debug.Log("Boss is enraged!");
             bossHealthManager.isEnraged = true;
             Enraged(); // Call the method to handle enraged state
         }
 
-        if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null)
+        if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null && !isEnraged)
         {
             stunCoroutine = StartCoroutine(StunEnemy(stunDuration));
+        }
+        else if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null && isEnraged)
+        {
+            stunCoroutine = StartCoroutine(StunEnragedEnemy());
         }
     }
 
@@ -118,6 +123,11 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
                 sr.sprite = null; // Clear barrage sprites when stunned
             }
         }
+        if(teleportCoroutine != null)
+        {
+            StopCoroutine(teleportCoroutine);
+            teleportCoroutine = null; // Reset teleport coroutine reference
+        }
 
         isStunned = true;
         yield return new WaitForSeconds(stunDuration);
@@ -126,6 +136,72 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         Debug.Log("Oni is no longer stunned.");
 
         stunCoroutine = null; // Reset stun coroutine reference
+    }
+
+    IEnumerator StunEnragedEnemy()
+    {
+        if (barrageCoroutine != null)
+        {
+            StopCoroutine(barrageCoroutine);
+            barrageCoroutine = null; // Reset barrage coroutine reference
+            foreach (SpriteRenderer sr in barrageSpritePlaceholder)
+            {
+                sr.sprite = null; // Clear barrage sprites when stunned
+            }
+        }
+        if (teleportCoroutine != null)
+        {
+            StopCoroutine(teleportCoroutine);
+            teleportCoroutine = null; // Reset teleport coroutine reference
+        }
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null; // Reset fade coroutine reference
+            fadeOut = true; // Set to true for fade out before stun
+            fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+        }
+        transform.position = new Vector2(0, 10.6f); // Move the enemy to a specific position when stunned
+        isStunned = true; // Set the stunned flag to true
+        Collider2D col = GameObject.Find("unknown-collider").GetComponent<Collider2D>();
+        col.enabled = false;
+        AcceptOrRejectScript aOR_Script = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
+        aOR_Script.isDeciding = true; // Set the deciding flag to true to allow player to accept or reject
+        while (aOR_Script.isDeciding)
+        {
+            AcceptOrReject();
+            yield return null; // Wait for the next frame while the player is deciding
+        }
+
+        acceptOrRejectGroup.SetActive(false);
+
+        if (aOR_Script.isAccepted)
+        {
+            bossHealthManager.TakeDamage(100, true); // Deal damage to the boss when accepted
+        }
+        else
+        {
+            PlayerHealthManager playerHealthManager = GameObject.Find("Player").GetComponent<PlayerHealthManager>();
+            playerHealthManager.TakeDamage(100); // Deal damage to the player when rejected
+        }
+
+        yield return null;
+        isStunned = false; // Reset the stunned flag
+        col.enabled = true; // Re-enable the collider after the stun effect
+        stunCoroutine = null; // Reset stun coroutine reference
+
+    }
+
+    void AcceptOrReject()
+    {
+        if (Vector2.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5f)
+        {
+            acceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
+        }
+        else
+        {
+            acceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
+        }
     }
 
     IEnumerator FadeSprite()

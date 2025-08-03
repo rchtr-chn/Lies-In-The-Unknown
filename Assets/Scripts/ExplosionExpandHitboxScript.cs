@@ -8,7 +8,7 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
     public BoxCollider2D boxCollider;
     public Vector2 targetSize = new Vector2(4f, 4f);
     public float duration = 2f;
-    public float explosionDamage = 25f;
+    public float explosionDamage = 5f;
 
     BossHealthManager bossHealthManager;
 
@@ -27,7 +27,7 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
     {
         if(bossHealthManager.isEnraged)
         {
-            explosionDamage = 50f; // Increase explosion damage when the boss is enraged
+            explosionDamage = 10f; // Increase explosion damage when the boss is enraged
         }
     }
 

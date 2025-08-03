@@ -15,6 +15,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     bool onCooldown = false;
 
     Coroutine attackCoroutine;
+    Coroutine cutSceneCoroutine;
 
     public Transform playerTransform;
     public Transform bulletSpawnerTransform;
@@ -30,11 +31,26 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     bool isStunned = false;
     public float stunDuration = 5f; // Duration of the stun effect
 
+    public GameObject cutSceneBorder; // Reference to the cutscene canvas, if needed
+    public GameObject cutSceneText; // Reference to the cutscene canvas for the Oni's enraged state
+    public bool isOnCutscene = false; // Flag to indicate if the Oni is in a cutscene
+
     Slider shieldBar; // Reference to the shield bar for the Oni
 
     private void Start()
     {
-        if(shieldBar == null)
+        if (cutSceneBorder == null)
+        {
+            cutSceneBorder = GameObject.Find("first-boss-cutscene");
+        }
+        cutSceneBorder.SetActive(false); // Ensure the cutscene canvas is initially inactive
+        if (cutSceneText == null)
+        {
+            cutSceneText = GameObject.Find("first-boss-cutscene-text");
+        }
+        cutSceneText.SetActive(false); // Ensure the cutscene text is initially inactive
+
+        if (shieldBar == null)
         {
             shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
@@ -63,6 +79,10 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     {
         if(bossHealthManager.health < bossHealthManager.enragedMinimum && !bossHealthManager.isEnraged)
         {
+            if (cutSceneCoroutine == null)
+            {
+                cutSceneCoroutine = StartCoroutine(EnragedCutscene());
+            }
             bossHealthManager.isEnraged = true;
             Enraged(); // Call the method to handle enraged state
         }
@@ -84,7 +104,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
             float distanceBetweenEntity = Vector2.Distance(transform.position - (Vector3)bossPosOffset, playerTransform.position);
             playerPos = playerTransform.position;
 
-            if (distanceBetweenEntity > maxDistanceToChase)
+            if (distanceBetweenEntity > maxDistanceToChase && !isOnCutscene)
             {
                 ChasePlayer();
                 if (attackCoroutine != null)
@@ -93,7 +113,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
                     attackCoroutine = null;
                 }
             }
-            else if (!onCooldown)
+            else if (!onCooldown && !isOnCutscene)
             {
                 attackCoroutine = StartCoroutine(StartAttack());
                 onCooldown = true;
@@ -163,5 +183,23 @@ public class OniEnemyBehaviorScript : MonoBehaviour
         oniSr.color = Color.red; // Change color to indicate enraged state
         maxDistanceToChase = 20f;
         bossSpeed = 3f;
+    }
+
+    IEnumerator EnragedCutscene()
+    {
+        yield return new WaitForSeconds(1f);
+
+        isOnCutscene = true;
+        cutSceneBorder.SetActive(true);
+        cutSceneText.SetActive(true);
+
+        yield return new WaitForSeconds(5f); // Wait for the cutscene to play out
+
+        cutSceneBorder.SetActive(false);
+        cutSceneText.SetActive(false);
+
+        cutSceneCoroutine = null; // Reset cutscene coroutine reference
+        isOnCutscene = false; // Reset the cutscene flag
+        yield return null;
     }
 }

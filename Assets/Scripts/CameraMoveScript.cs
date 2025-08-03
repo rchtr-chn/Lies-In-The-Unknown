@@ -6,19 +6,51 @@ public class CameraMoveScript : MonoBehaviour
 {
     Vector2 offset = new Vector2(0, 7f);
     public GameObject player;
+    public GameObject firstBoss;
+    public GameObject secondBoss;
+    public AcceptOrRejectScript aOR_Script;
+    public Camera thisCamera;
+
+    public OniEnemyBehaviorScript oniEnemyScript;
 
     private void Start()
     {
+        if(oniEnemyScript == null)
+            oniEnemyScript = GameObject.Find("OniEnemy").GetComponent<OniEnemyBehaviorScript>();
         if (!player)
             player = GameObject.Find("Player");
+        if (aOR_Script == null)
+            aOR_Script = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
+        if (thisCamera == null)
+            thisCamera = Camera.main;
     }
 
     private void Update()
     {
+        if(oniEnemyScript.isOnCutscene)
+        {
+            transform.position = firstBoss.transform.position + new Vector3(-3, 11.2f, transform.position.z);
+            thisCamera.orthographicSize = 5f; // Adjust camera size for cutscene
+            return;
+        }
+        else if (aOR_Script.isDeciding && Vector2.Distance(secondBoss.transform.position, player.transform.position) < 5f)
+        {
+            transform.position = new Vector3(0, 32f, transform.position.z);
+            thisCamera.orthographicSize = 5f; // Adjust camera size for decision screen
+        }
+        else
+        {
+            FollowPlayer();
+        }
+    }
+
+    void FollowPlayer()
+    {
         if (player)
         {
             Vector3 playerPosition = player.transform.position;
-            transform.position = new Vector3(transform.position.x, playerPosition.y + offset.y, transform.position.z);
+            transform.position = new Vector3(0, playerPosition.y + offset.y, transform.position.z);
+            thisCamera.orthographicSize = 15f; // Reset camera size when not deciding
         }
         else
         {
