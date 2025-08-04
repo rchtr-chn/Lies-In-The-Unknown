@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Start-Menu-Scene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Pre-Tutorial-Cutscene.unity
+    path: Assets/Scenes/Post-Tutorial-Cutscene.unity
     guid: 1a6e0650d3120cb49aa06ff0fa336e34
   - enabled: 1
     path: Assets/Scenes/Tutorial.unity

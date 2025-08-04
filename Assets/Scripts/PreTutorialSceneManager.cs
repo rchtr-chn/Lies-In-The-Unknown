@@ -28,6 +28,6 @@ public class PreTutorialSceneManager : MonoBehaviour
     void OnVideoEnd(VideoPlayer vp)
     {
         audioManager.musicSource.Play();
-        SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("Gameplay");
     }
 }

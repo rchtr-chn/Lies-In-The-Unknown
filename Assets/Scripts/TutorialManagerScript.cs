@@ -12,6 +12,8 @@ public class TutorialManagerScript : MonoBehaviour
     readonly float fadeDuration = 1.5f;
     public GameObject blackImage;
 
+    AudioManagerScript audioManager;
+
     private void Awake()
     {
         if(blackImage == null)
@@ -33,6 +35,11 @@ public class TutorialManagerScript : MonoBehaviour
     }
     void Start()
     {
+        if(audioManager == null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
+
         tutorialCoroutine = StartCoroutine(TutorialCoroutine());
     }
 
@@ -153,6 +160,7 @@ public class TutorialManagerScript : MonoBehaviour
             fadeCoroutine = null; // Reset coroutine reference
         }
 
-        SceneManager.LoadScene("Gameplay");
+        audioManager.musicSource.Stop();
+        SceneManager.LoadScene("Post-Tutorial-Cutscene");
     }
 }

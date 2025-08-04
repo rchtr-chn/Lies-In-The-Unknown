@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LevelManagerScript : MonoBehaviour
 {
@@ -25,6 +27,11 @@ public class LevelManagerScript : MonoBehaviour
 
     public AudioManagerScript audioManager;
     public GameObject dialogueManager;
+
+    Coroutine cutsceneCoroutine;
+    public GameObject cutSceneDisplay;
+    public GameObject cutSceneOBJ;
+
 
     private void Awake()
     {
@@ -55,14 +62,31 @@ public class LevelManagerScript : MonoBehaviour
         }
         playerTransform.position = new Vector2(0, -1.5f);
 
-        //levelOne.SetActive(true);
-        //firstBoss.SetActive(true);
-        InitiateSecondLevel();
+        levelOne.SetActive(true);
+        firstBoss.SetActive(true);
+
+
 
         audioManager.musicSource.Stop();
         audioManager.musicSource.clip = audioManager.levelOneBGM;
         audioManager.musicSource.loop = true;
         audioManager.musicSource.Play();
+    }
+
+    public void CutscenePostOni()
+    {
+        audioManager.musicSource.Stop();
+        cutSceneDisplay.SetActive(true);
+        cutSceneOBJ.SetActive(true);
+
+        cutSceneOBJ.GetComponent<VideoPlayer>().loopPointReached += OnVideoEnd;
+    }
+
+    void OnVideoEnd(VideoPlayer vp)
+    {
+        cutSceneDisplay.SetActive(false);
+        cutSceneOBJ.SetActive(false);
+        InitiateSecondLevel();
     }
 
     public void InitiateSecondLevel()

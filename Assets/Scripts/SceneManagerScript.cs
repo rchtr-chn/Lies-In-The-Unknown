@@ -24,15 +24,15 @@ public class SceneManagerScript : MonoBehaviour
 
         if (settingsUI == null)
         {
-            settingsUI = GameObject.Find("SettingsUI");
+            settingsUI = GameObject.Find("settings-canvas");
         }
         settingsUI.SetActive(false); // Ensure the settings UI is initially inactive
     }
 
     public void StartGame()
     {
-        audioManager.musicSource.Stop();
-        SceneManager.LoadScene("Pre-Tutorial-Cutscene");
+        //audioManager.musicSource.Stop();
+        SceneManager.LoadScene("Tutorial");
     }
     public void OpenSettings()
     {

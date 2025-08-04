@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static Unity.Burst.Intrinsics.X86;
+using UnityEngine.SceneManagement;
 
 public class UnknownEnemyBehaviorscript : MonoBehaviour
 {
@@ -75,6 +75,16 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
     void Update()
     {
+        if(isStunned)
+        {
+            if (fadeCoroutine == null && spriteRenderer.color.a < 1f)
+            {
+                fadeOut = true; // Set to true for fade out before stun
+                fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+            }
+            return; // Skip the rest of the update if stunned
+        }
+
         if (!isStunned && barrageCoroutine == null)
         {
             barrageCoroutine = StartCoroutine(BarrageAttack());
@@ -133,7 +143,9 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
     IEnumerator StunEnemy(float stunDuration)
     {
-        if(barrageCoroutine != null)
+        isStunned = true;
+
+        if (barrageCoroutine != null)
         {
             StopCoroutine(barrageCoroutine);
             barrageCoroutine = null; // Reset barrage coroutine reference
@@ -152,8 +164,6 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             }
             teleportCoroutine = null; // Reset teleport coroutine reference
         }
-
-        isStunned = true;
         audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
 
         yield return new WaitForSeconds(stunDuration);
@@ -167,6 +177,8 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
     IEnumerator StunEnragedEnemy()
     {
+        isStunned = true; // Set the stunned flag to true
+
         if (barrageCoroutine != null)
         {
             StopCoroutine(barrageCoroutine);
@@ -189,7 +201,6 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
         }
         transform.position = new Vector2(0, 11.75f); // Move the enemy to a specific position when stunned
-        isStunned = true; // Set the stunned flag to true
         if(!lastShieldQueue)
         {
             audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
@@ -233,26 +244,27 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             yield return null; // Wait for the next frame while the player is deciding
         }
 
-        aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
         acceptOrRejectGroup.SetActive(false);
-
-        LevelManagerScript levelManager = GameObject.Find("GameManager").GetComponent<LevelManagerScript>();
-
-        if (!aOR_Script.isDeciding && aOR_Script.isAccepted)
-        {
-            Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
-            levelManager.AcceptCutscene();
-        }
-        else if (!aOR_Script.isDeciding && !aOR_Script.isAccepted)
-        {
-            Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
-            levelManager.RejectCutscene();
-        }
+        aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
 
         yield return null;
         isStunned = false; // Reset the stunned flag
         col.enabled = true; // Re-enable the collider after the stun effect
         stunCoroutine = null; // Reset stun coroutine reference
+
+        LevelManagerScript levelManager = GameObject.Find("GameManager").GetComponent<LevelManagerScript>();
+
+        if (!aOR_Script.isDeciding && aOR_Script.isAccepted)
+        {
+            //Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
+            SceneManager.LoadScene("You-Win-Cutscene");
+        }
+        if (!aOR_Script.isDeciding && !aOR_Script.isAccepted)
+        {
+            //Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
+            //levelManager.RejectCutscene();
+            SceneManager.LoadScene("You-Lose-Cutscene"); // Load the lose cutscene if the player rejects
+        }
     }
 
     IEnumerator FadeSprite()

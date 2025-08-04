@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,9 +10,14 @@ public class PlayerShootingScript : MonoBehaviour
     public StaminaBarScript staminaBarScript;
     public Animator animator;
     public AudioManagerScript audioManager;
+    public PauseMenuScript pauseMenuScript;
 
     private void Start()
     {
+        if(pauseMenuScript == null && GameObject.Find("PauseMenuGroup") != null)
+        {
+            pauseMenuScript = GameObject.Find("PauseMenuGroup").GetComponent<PauseMenuScript>();
+        }
         if (audioManager == null && GameObject.Find("AudioManager") != null)
         {
             audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
@@ -44,7 +50,7 @@ public class PlayerShootingScript : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (ctx.performed && !pauseMenuScript.isPaused)
         {
             if (bulletPrefab)
             {
@@ -53,7 +59,7 @@ public class PlayerShootingScript : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Bullet prefab not found!");
+                Debug.Log("isPaused bro");
             }
         }
     }

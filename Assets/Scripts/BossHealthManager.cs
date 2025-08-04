@@ -70,7 +70,7 @@ public class BossHealthManager : MonoBehaviour
             LevelManagerScript levelManager = FindObjectOfType<LevelManagerScript>();
             if (levelManager != null)
             {
-                levelManager.InitiateSecondLevel(); // Call the method to initiate the second level
+                levelManager.CutscenePostOni(); // Call the method to initiate the second level
             }
         }
     }
