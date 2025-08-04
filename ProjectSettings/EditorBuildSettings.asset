@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/You-Win-Cutscene.unity
     guid: 7ce595b0a1a4afa48bd9c5542a541332
+  - enabled: 1
+    path: Assets/Scenes/Game-Over-Scene.unity
+    guid: 37d3d0c69572dee4bb5223658ae5b3b5
   m_configObjects: {}

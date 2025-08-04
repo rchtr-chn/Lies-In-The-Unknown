@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHealthManager : MonoBehaviour
@@ -29,7 +30,7 @@ public class PlayerHealthManager : MonoBehaviour
     {
         if (health <= 0)
         {
-            //Die();
+            SceneManager.LoadScene("Game-Over-Scene"); // Load Game Over scene when health reaches 0
         }
     }
 
