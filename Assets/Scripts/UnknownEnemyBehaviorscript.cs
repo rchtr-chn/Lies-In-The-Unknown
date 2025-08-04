@@ -37,8 +37,24 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     BossHealthManager bossHealthManager;
     Slider shieldBar;
 
+    AudioManagerScript audioManager;
+    bool lastShieldQueue = false; // Track the last shield state to avoid unnecessary updates
+
+    AcceptOrRejectScript aOR_Script; // Reference to the AcceptOrRejectScript for handling player decisions
+    public LevelTwoDialogueScript levelTwoDialogueScript; // Reference to the LevelTwoDialogueScript for handling dialogues
+
+    Animator animator; // Reference to the Animator for handling animations
+
     private void Start()
     {
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+        }
+        if (!audioManager && GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
         if (!bossHealthManager)
         {
             bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
@@ -74,7 +90,8 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         {
             stunCoroutine = StartCoroutine(StunEnemy(stunDuration));
         }
-        else if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null && isEnraged)
+        
+        if (bossHealthManager.health <= 10f)
         {
             stunCoroutine = StartCoroutine(StunEnragedEnemy());
         }
@@ -135,6 +152,8 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         }
 
         isStunned = true;
+        audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
+
         yield return new WaitForSeconds(stunDuration);
         isStunned = false;
         teleportCoroutine = StartCoroutine(TeleportRandomly()); // Restart teleport coroutine after stun
@@ -169,9 +188,19 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         }
         transform.position = new Vector2(0, 10.6f); // Move the enemy to a specific position when stunned
         isStunned = true; // Set the stunned flag to true
+        if(!lastShieldQueue)
+        {
+            audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
+        }
+        lastShieldQueue = true; // Set the last shield state to true to avoid unnecessary updates
         Collider2D col = GameObject.Find("unknown-collider").GetComponent<Collider2D>();
         col.enabled = false;
-        AcceptOrRejectScript aOR_Script = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
+
+        if(!aOR_Script)
+        {
+            aOR_Script = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
+        }
+
         aOR_Script.isDeciding = true; // Set the deciding flag to true to allow player to accept or reject
         while (aOR_Script.isDeciding)
         {
@@ -187,8 +216,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         }
         else
         {
-            PlayerHealthManager playerHealthManager = GameObject.Find("Player").GetComponent<PlayerHealthManager>();
-            playerHealthManager.TakeDamage(100); // Deal damage to the player when rejected
+            bossHealthManager.TakeDamage(100, true); // Deal damage to the boss when accepted
         }
 
         yield return null;
@@ -203,9 +231,15 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         if (Vector2.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5f)
         {
             acceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
+            levelTwoDialogueScript.OnAOR(); // Trigger the accept or reject dialogue
+            if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+            {
+                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+            }
         }
         else
         {
+            levelTwoDialogueScript.OffAOR(); // Turn off the accept or reject dialogue if player is too far
             acceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
         }
     }
@@ -241,7 +275,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             // Wait for a short duration before moving to the next sprite
             if(isEnraged == false)
             {
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.7f);
             }
         }
 
@@ -260,6 +294,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             {
                 // Instantiate the barrage attack at the spawn position
                 GameObject bullet = Instantiate(barrageBulletPrefab, spawnPos.position, spawnPos.rotation);
+                audioManager.PlaySfx(audioManager.firstBossAttackSfx); // Play barrage attack sound
                 barrageSpritePlaceholder[index].sprite = null;
                 index++;
             }
@@ -272,6 +307,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
     void Enraged()
     {
+        animator.SetBool("isEnraged", true); // Set the animator parameter to trigger enraged animations
         spriteRenderer.color = Color.red; // Change the sprite color to red when enraged
         intervalBetweenTeleports = 5f; // Decrease teleport interval when enraged
         attackCooldown = 2f; // Decrease attack cooldown when enraged

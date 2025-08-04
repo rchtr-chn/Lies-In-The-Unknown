@@ -12,7 +12,26 @@ public class AudioManagerScript : MonoBehaviour
 
 
     [Header("----------------------- Audio Clip -----------------------")]
-    public AudioClip clip;
+    public AudioClip firstBossMoveSfx;
+    public AudioClip firstBossAttackSfx;
+    public AudioClip playerJumpSfx;
+    public AudioClip playerRejectSfx;
+    public AudioClip playerRunSfx;
+    public AudioClip playerAttackSfx;
+    public AudioClip playerAcceptsSfx;
+    public AudioClip secondBossTeleportSfx;
+    public AudioClip secondBossAttackSfx;
+    public AudioClip shieldBreakSfx;
+
+    public AudioClip carHornSfx;
+    public AudioClip carCrashSfx;
+
+    [Header("----------------------- BGM Clips -----------------------")]
+    public AudioClip startMenuBGM;
+    public AudioClip levelOneBGM;
+    public AudioClip levelTwoBGM;
+    public AudioClip Ending;
+    public AudioClip gameOverBGM;
 
     [Header("----------------------- Audio Slider -----------------------")]
     public AudioMixer audioMixer;
@@ -37,7 +56,9 @@ public class AudioManagerScript : MonoBehaviour
 
     private void Start()
     {
-
+        musicSource.clip = startMenuBGM;
+        musicSource.loop = true;
+        musicSource.Play();
     }
     public void SetMasterVolume()
     {
@@ -56,5 +77,17 @@ public class AudioManagerScript : MonoBehaviour
     {
         float volume = musicSlider.value;
         audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
+    }
+
+    public void PlaySfx(AudioClip clip)
+    {
+        if (effectSource != null && clip != null)
+        {
+            effectSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning("Effect source or clip is null");
+        }
     }
 }

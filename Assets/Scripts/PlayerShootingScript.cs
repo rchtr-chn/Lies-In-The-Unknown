@@ -8,9 +8,14 @@ public class PlayerShootingScript : MonoBehaviour
     public GameObject bulletPrefab;
     public StaminaBarScript staminaBarScript;
     public Animator animator;
+    public AudioManagerScript audioManager;
 
     private void Start()
     {
+        if (audioManager == null && GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
         if (!animator)
         {
             animator = GameObject.Find("Player").GetComponent<Animator>();
@@ -44,6 +49,7 @@ public class PlayerShootingScript : MonoBehaviour
             if (bulletPrefab)
             {
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+                audioManager.PlaySfx(audioManager.playerAttackSfx);
             }
             else
             {

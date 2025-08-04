@@ -22,9 +22,20 @@ public class LevelManagerScript : MonoBehaviour
 
     public Transform playerTransform;
 
+    public AudioManagerScript audioManager;
+    public GameObject dialogueManager;
+
     private void Awake()
     {
-        if(levelOneBG == null)
+        if(dialogueManager == null)
+        {
+            dialogueManager = GameObject.Find("DialogueManager");
+        }
+        if (audioManager == null && GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
+        if (levelOneBG == null)
         {
             levelOneBG = GameObject.Find("background-1");
         }
@@ -45,10 +56,21 @@ public class LevelManagerScript : MonoBehaviour
 
         levelOne.SetActive(true);
         firstBoss.SetActive(true);
+        //InitiateSecondLevel();
+
+        audioManager.musicSource.Stop();
+        audioManager.musicSource.clip = audioManager.levelOneBGM;
+        audioManager.musicSource.loop = true;
+        audioManager.musicSource.Play();
     }
 
     public void InitiateSecondLevel()
     {
+        audioManager.musicSource.Stop();
+        audioManager.musicSource.clip = audioManager.levelTwoBGM;
+        audioManager.musicSource.loop = true;
+        audioManager.musicSource.Play();
+
         levelOneBG.SetActive(false);
         UpdateBossHealthBar();
         UpdatePlayerHealthBar();
@@ -62,6 +84,8 @@ public class LevelManagerScript : MonoBehaviour
         secondBoss.SetActive(true);
 
         fadeCoroutine = StartCoroutine(FadeImage(1f, 0f));
+
+        dialogueManager.SetActive(true); // Activate the dialogue manager for level two
     }
 
     public IEnumerator FadeImage(float fromAlpha, float toAlpha)

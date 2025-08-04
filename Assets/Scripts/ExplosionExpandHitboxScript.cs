@@ -12,15 +12,21 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
 
     BossHealthManager bossHealthManager;
 
+    AudioManagerScript audioManager;
+
     private void Start()
     {
-        if(!bossHealthManager)
+        if (!audioManager && GameObject.Find("AudioManager") != null)
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+
+        if (!bossHealthManager)
             bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
 
         if (!boxCollider)
             boxCollider = GetComponent<BoxCollider2D>();
 
         StartCoroutine(ExpandOverTime());
+        audioManager.PlaySfx(audioManager.firstBossAttackSfx); // Play explosion sound effect
     }
 
     private void Update()

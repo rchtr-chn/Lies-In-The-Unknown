@@ -8,13 +8,22 @@ public class PlayerMovementScript : MonoBehaviour
 {
     public float speed = 5f;
     public float jumpForce = 5f;
+
+    float intervalTimer = 0f;
+    float sfxInterval = 0.5f; // Interval for walking sound effects
+
     bool isGrounded = false;
     SpriteRenderer sr;
     Rigidbody2D rb;
     public Animator animator;
+    public AudioManagerScript audioManager;
 
     private void Start()
     {
+        if (audioManager == null && GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
         if (!animator)
         {
             animator = GetComponent<Animator>();
@@ -31,7 +40,9 @@ public class PlayerMovementScript : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(horizontalInput * speed, rb.velocity.y);
-        
+
+        WalkSFX();
+
         animator.SetFloat("velocity", rb.velocity.magnitude);
     }
 
@@ -61,6 +72,9 @@ public class PlayerMovementScript : MonoBehaviour
         if (context.performed && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+            audioManager.PlaySfx(audioManager.playerJumpSfx);
+
             isGrounded = false;
         }
     }
@@ -71,5 +85,22 @@ public class PlayerMovementScript : MonoBehaviour
             isGrounded = true;
         else
             isGrounded = false;
+    }
+
+    void WalkSFX()
+    {
+        if (rb.velocity.magnitude > 0.1f && isGrounded)
+        {
+            intervalTimer += Time.deltaTime;
+            if (intervalTimer > sfxInterval)
+            {
+                intervalTimer = 0f;
+                audioManager.PlaySfx(audioManager.playerRunSfx);
+            }
+        }
+        else
+        {
+            intervalTimer = 0f;
+        }
     }
 }

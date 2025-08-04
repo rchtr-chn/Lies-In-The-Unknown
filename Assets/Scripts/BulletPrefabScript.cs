@@ -12,6 +12,7 @@ public class BulletPrefabScript : MonoBehaviour
     float damage;
     public float force = 5f;
     bool isFullCharge = false; // Track if the bullet is fully charged
+    public GameObject player;
 
     public LayerMask environmentLayer;
 
@@ -19,7 +20,11 @@ public class BulletPrefabScript : MonoBehaviour
 
     private void Start()
     {
-        if(!staminaBar)
+        if (!player)
+        {
+            player = GameObject.Find("Player");
+        }
+        if (!staminaBar)
         {
             staminaBar = GameObject.Find("stamina-bar").GetComponent<Slider>();
         }
@@ -40,6 +45,14 @@ public class BulletPrefabScript : MonoBehaviour
         rb.velocity = direction * force;
         float angle = Mathf.Atan2(rotaion.y, rotaion.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle)); // Adjust rotation to face the mouse position
+    }
+
+    private void Update()
+    {
+        if (Vector2.Distance(transform.position, player.transform.position) >= 50f)
+        {
+            Destroy(gameObject); // Destroy the bullet if it goes too far from the player
+        }
     }
 
     float GetDamage()

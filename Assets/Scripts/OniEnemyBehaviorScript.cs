@@ -35,10 +35,18 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     public GameObject cutSceneText; // Reference to the cutscene canvas for the Oni's enraged state
     public bool isOnCutscene = false; // Flag to indicate if the Oni is in a cutscene
 
+    public AudioManagerScript audioManager; // Reference to the AudioManager, if needed
+    float elapsed = 0f;
+    bool hasPlayed = false;
+
     Slider shieldBar; // Reference to the shield bar for the Oni
 
     private void Start()
     {
+        if (audioManager == null && GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
         if (cutSceneBorder == null)
         {
             cutSceneBorder = GameObject.Find("first-boss-cutscene");
@@ -97,6 +105,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
             stunCoroutine = StartCoroutine(StunEnemy(stunDuration));
         }
 
+
         if (!isStunned)
         {
             FlipAssetX();
@@ -115,6 +124,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
             }
             else if (!onCooldown && !isOnCutscene)
             {
+                hasPlayed = false; // Reset hasPlayed to allow sound to play again
                 attackCoroutine = StartCoroutine(StartAttack());
                 onCooldown = true;
             }
@@ -139,6 +149,19 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     void ChasePlayer()
     {
         transform.position = Vector2.MoveTowards(transform.position, playerPos, bossSpeed * Time.deltaTime);
+
+
+        if(hasPlayed == false)
+        {
+            audioManager.PlaySfx(audioManager.firstBossMoveSfx);
+            hasPlayed = true;
+        }
+        elapsed += Time.deltaTime;
+        if(elapsed >= 3.05f)
+        {
+            audioManager.PlaySfx(audioManager.firstBossMoveSfx);
+            elapsed = 0f; // Reset elapsed time after playing the sound
+        }
     }
 
     IEnumerator StartAttack()
@@ -146,6 +169,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
 
         GameObject enemyBullet = Instantiate(oniBullet, bulletSpawnerTransform.position, bulletSpawnerTransform.rotation);
+        audioManager.PlaySfx(audioManager.playerAttackSfx);
 
         yield return null;
     }
@@ -169,12 +193,15 @@ public class OniEnemyBehaviorScript : MonoBehaviour
     IEnumerator StunEnemy(float stunDuration)
     {
         isStunned = true;
+        audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
+
         yield return new WaitForSeconds(stunDuration);
         isStunned = false;
         shieldBar.value = bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
         Debug.Log("Oni is no longer stunned.");
 
         stunCoroutine = null; // Reset stun coroutine reference
+        hasPlayed = false; // Reset hasPlayed to allow sound to play again
     }
 
     void Enraged()
