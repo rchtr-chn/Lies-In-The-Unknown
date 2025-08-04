@@ -28,6 +28,8 @@ public class LevelTwoDialogueScript : MonoBehaviour
         {
             bossHealthManager = GameObject.Find("Unknown-boss").GetComponent<BossHealthManager>();
         }
+
+        dialogueText.gameObject.SetActive(true);
         dialogueCoroutine = StartCoroutine(InitialDialogue());
     }
 

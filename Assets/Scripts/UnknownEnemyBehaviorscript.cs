@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.Burst.Intrinsics.X86;
 
 public class UnknownEnemyBehaviorscript : MonoBehaviour
 {
@@ -93,6 +94,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         
         if (bossHealthManager.health <= 10f)
         {
+            animator.SetBool("isEnraged", false); // Trigger enraged animations when health is low
             stunCoroutine = StartCoroutine(StunEnragedEnemy());
         }
     }
@@ -186,7 +188,7 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
             fadeOut = true; // Set to true for fade out before stun
             fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
         }
-        transform.position = new Vector2(0, 10.6f); // Move the enemy to a specific position when stunned
+        transform.position = new Vector2(0, 11.75f); // Move the enemy to a specific position when stunned
         isStunned = true; // Set the stunned flag to true
         if(!lastShieldQueue)
         {
@@ -202,46 +204,55 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         }
 
         aOR_Script.isDeciding = true; // Set the deciding flag to true to allow player to accept or reject
+
         while (aOR_Script.isDeciding)
         {
-            AcceptOrReject();
+            if (Vector2.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5f)
+            {
+                acceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
+                levelTwoDialogueScript.OnAOR(); // Trigger the accept or reject dialogue
+            }
+            else
+            {
+                levelTwoDialogueScript.OffAOR(); // Turn off the accept or reject dialogue if player is too far
+                acceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
+            }
+
+            if(Input.GetKey(KeyCode.Q))
+            {
+                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+                aOR_Script.isAccepted = true; // Set the accepted flag to true
+            }
+            else if (Input.GetKey(KeyCode.E))
+            {
+                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+                aOR_Script.isAccepted = false; // Set the accepted flag to false
+            }
+
+                Debug.Log("is deciding");
             yield return null; // Wait for the next frame while the player is deciding
         }
 
+        aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
         acceptOrRejectGroup.SetActive(false);
 
-        if (aOR_Script.isAccepted)
+        LevelManagerScript levelManager = GameObject.Find("GameManager").GetComponent<LevelManagerScript>();
+
+        if (!aOR_Script.isDeciding && aOR_Script.isAccepted)
         {
-            bossHealthManager.TakeDamage(100, true); // Deal damage to the boss when accepted
+            Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
+            levelManager.AcceptCutscene();
         }
-        else
+        else if (!aOR_Script.isDeciding && !aOR_Script.isAccepted)
         {
-            bossHealthManager.TakeDamage(100, true); // Deal damage to the boss when accepted
+            Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
+            levelManager.RejectCutscene();
         }
 
         yield return null;
         isStunned = false; // Reset the stunned flag
         col.enabled = true; // Re-enable the collider after the stun effect
         stunCoroutine = null; // Reset stun coroutine reference
-
-    }
-
-    void AcceptOrReject()
-    {
-        if (Vector2.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5f)
-        {
-            acceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
-            levelTwoDialogueScript.OnAOR(); // Trigger the accept or reject dialogue
-            if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
-            {
-                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
-            }
-        }
-        else
-        {
-            levelTwoDialogueScript.OffAOR(); // Turn off the accept or reject dialogue if player is too far
-            acceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
-        }
     }
 
     IEnumerator FadeSprite()
@@ -308,7 +319,6 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     void Enraged()
     {
         animator.SetBool("isEnraged", true); // Set the animator parameter to trigger enraged animations
-        spriteRenderer.color = Color.red; // Change the sprite color to red when enraged
         intervalBetweenTeleports = 5f; // Decrease teleport interval when enraged
         attackCooldown = 2f; // Decrease attack cooldown when enraged
         isEnraged = true; // Set the enraged flag to true

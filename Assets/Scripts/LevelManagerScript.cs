@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelManagerScript : MonoBehaviour
@@ -54,9 +55,9 @@ public class LevelManagerScript : MonoBehaviour
         }
         playerTransform.position = new Vector2(0, -1.5f);
 
-        levelOne.SetActive(true);
-        firstBoss.SetActive(true);
-        //InitiateSecondLevel();
+        //levelOne.SetActive(true);
+        //firstBoss.SetActive(true);
+        InitiateSecondLevel();
 
         audioManager.musicSource.Stop();
         audioManager.musicSource.clip = audioManager.levelOneBGM;
@@ -149,5 +150,15 @@ public class LevelManagerScript : MonoBehaviour
         playerHealthBar.maxValue = playerHealthScript.maxHealth;
         playerHealthBar.value = playerHealthScript.maxHealth;
         Debug.Log("Player health bar updated.");
+    }
+
+    public void AcceptCutscene()
+    {
+        SceneManager.LoadScene("You-Win-Cutscene");
+    }
+
+    public void RejectCutscene()
+    {
+        SceneManager.LoadScene("You-Lose-Cutscene");
     }
 }

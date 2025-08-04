@@ -90,4 +90,16 @@ public class AudioManagerScript : MonoBehaviour
             Debug.LogWarning("Effect source or clip is null");
         }
     }
+
+    public void StopMusic()
+    {
+        if (musicSource != null)
+        {
+            musicSource.Stop();
+        }
+        else
+        {
+            Debug.LogWarning("Music source is null");
+        }
+    }
 }

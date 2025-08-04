@@ -100,6 +100,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 630334127695624744, guid: b6e04697b68c85749ae2bc6958132a35, type: 3}
   staminaBarScript: {fileID: 0}
   animator: {fileID: 909755231734347526}
+  audioManager: {fileID: 0}
 --- !u!1 &6250042537634050909
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,35 +301,11 @@ MonoBehaviour:
     m_ActionId: 1f063b05-da5a-47c2-8340-d4e904b5b423
     m_ActionName: PlayerControls/Shoot[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2528153991128029441}
-        m_TargetAssemblyTypeName: AcceptOrRejectScript, Assembly-CSharp
-        m_MethodName: Accept
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: ee78d5d8-2b59-4592-8475-8afe4fd7d716
     m_ActionName: PlayerControls/Accept[/Keyboard/q]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2528153991128029441}
-        m_TargetAssemblyTypeName: AcceptOrRejectScript, Assembly-CSharp
-        m_MethodName: Reject
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 352cef2d-374a-4d21-97d9-cc45f8825c31
     m_ActionName: PlayerControls/Reject[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
@@ -351,6 +328,7 @@ MonoBehaviour:
   speed: 8
   jumpForce: 14.5
   animator: {fileID: 909755231734347526}
+  audioManager: {fileID: 0}
 --- !u!50 &5262330344672444753
 Rigidbody2D:
   serializedVersion: 4

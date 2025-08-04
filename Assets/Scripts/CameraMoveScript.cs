@@ -35,7 +35,7 @@ public class CameraMoveScript : MonoBehaviour
         }
         else if (aOR_Script.isDeciding && Vector2.Distance(secondBoss.transform.position, player.transform.position) < 5f)
         {
-            transform.position = new Vector3(0, 10.6f, transform.position.z);
+            transform.position = new Vector3(0, 11.75f, transform.position.z);
             thisCamera.orthographicSize = 5f; // Adjust camera size for decision screen
         }
         else

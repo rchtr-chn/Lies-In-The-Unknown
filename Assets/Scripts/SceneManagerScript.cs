@@ -9,8 +9,18 @@ public class SceneManagerScript : MonoBehaviour
     public GameObject settingsUI;
     bool isSettingsOpen = false;
 
+    AudioManagerScript audioManager;
+
     private void Awake()
     {
+        if (GameObject.Find("AudioManager") != null)
+        {
+            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        }
+        else
+        {
+            Debug.LogError("AudioManager not found in the scene.");
+        }
 
         if (settingsUI == null)
         {
@@ -21,7 +31,8 @@ public class SceneManagerScript : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Tutorial");
+        audioManager.musicSource.Stop();
+        SceneManager.LoadScene("Pre-Tutorial-Cutscene");
     }
     public void OpenSettings()
     {
