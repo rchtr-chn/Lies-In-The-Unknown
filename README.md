@@ -1,3 +1,21 @@
+<table width="100%">
+  <tr>
+    <!-- Top large gif -->
+    <td colspan="2" align="center">
+      <img src="https://github.com/rchtr-chn/Lies-In-The-Unknown/raw/main/gif-1.gif" width="100%"/>
+    </td>
+  </tr>
+  <tr>
+    <!-- Bottom two gifs -->
+    <td align="center" width="50%">
+      <img src="https://github.com/rchtr-chn/Lies-In-The-Unknown/raw/main/gif-2.gif" width="100%"/>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://github.com/rchtr-chn/Lies-In-The-Unknown/raw/main/gif-3.gif" width="100%"/>
+    </td>
+  </tr>
+</table>
+
 <h2>👹 Lies In The Unknown</h2>
   <img width=350px align="left" src=https://img.itch.zone/aW1hZ2UvMzc4NzQ2Ny8yMjU2OTM1My5wbmc=/347x500/kOxbxh.png>
 
