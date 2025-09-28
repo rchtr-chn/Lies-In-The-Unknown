@@ -61,7 +61,7 @@ Or… (There's 2 ending)
 
 <h2>💡 My Contributions</h2>
 
-  as the sole programmer of this project, I am tasked to make all of the mechanics that make the game function as intended, such as the player move and shoot mechanic, enemy AI/state machine, and scene manager.
+  As the sole programmer of this project, I am tasked to make all of the mechanics that make the game function as intended, such as the player move and shoot mechanic, enemy AI/state machine, and scene manager.
 <h2>📜 Scripts</h2>
 
   | Script | Description |
