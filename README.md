@@ -39,7 +39,7 @@ Or… (There's 2 ending)
   <b>Team:</b>
   - <a href="https://github.com/rchtr-chn">Richter Cheniago</a> (Game programmer)
   - <a href="https://kelvinkel.carrd.co">Kelvin</a> (Game artist)
-  - <a href="https://jordytandiano.carrd.co">Jordy Tandiano</a> (Game designer and music artist)
+  - <a href="https://jordytandiano.my.canva.site">Jordy Tandiano</a> (Game designer and music artist)
 
 <h2>💡 My Contributions</h2>
 
