@@ -1,40 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BossHealthManager : MonoBehaviour
 {
-    public int maxHealth = 100;
-    public int health;
-    public int maxShield = 50;
-    public int shield;
-    public float enragedMinimum = 50f;
+    public int MaxHealth = 100;
+    public int Health;
+    public int MaxShield = 50;
+    public int Shield;
+    public float EnragedMinimumHP = 50f;
 
     public bool isEnraged = false; // Optional: Track if the Oni is enraged
 
-    public Slider healthBar;
-    public Slider shieldBar;
+    public Slider HealthBar;
+    public Slider ShieldBar;
 
 
     private void Start()
     {
-        if (healthBar == null)
+        if (HealthBar == null)
         {
-            healthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
+            HealthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
         }
-        if (shieldBar == null)
+        if (ShieldBar == null)
         {
-            shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
+            ShieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
 
-        healthBar.maxValue = health = maxHealth;
-        shieldBar.maxValue = shield = maxShield;
+        HealthBar.maxValue = Health = MaxHealth;
+        ShieldBar.maxValue = Shield = MaxShield;
     }
 
     private void Update()
     {
-        if (health <= 0)
+        if (Health <= 0)
         {
             Die();
         }
@@ -42,22 +40,22 @@ public class BossHealthManager : MonoBehaviour
 
     public void TakeDamage(int damage, bool isFullCharged)
     {
-        if (shield > 0 && isFullCharged)
+        if (Shield > 0 && isFullCharged)
         {
-            shield -= damage;
-            if (shield < 0)
+            Shield -= damage;
+            if (Shield < 0)
             {
-                shield = 0; // Ensure shield doesn't go below 0
-                health += shield; // Apply remaining damage to health if shield is depleted
+                Shield = 0; // Ensure shield doesn't go below 0
+                Health += Shield; // Apply remaining damage to health if shield is depleted
             }
         }
-        else if (shield <= 0)
+        else if (Shield <= 0)
         {
-            health -= damage;
+            Health -= damage;
         }
 
-        healthBar.value = (float)health;
-        shieldBar.value = (float)shield;
+        HealthBar.value = (float)Health;
+        ShieldBar.value = (float)Shield;
     }
 
     public void Die()

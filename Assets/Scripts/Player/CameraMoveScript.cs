@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMoveScript : MonoBehaviour
@@ -27,13 +25,13 @@ public class CameraMoveScript : MonoBehaviour
 
     private void Update()
     {
-        if(oniEnemyScript.isOnCutscene)
+        if(oniEnemyScript.IsOnCutscene)
         {
             transform.position = firstBoss.transform.position + new Vector3(-3, 11.2f, transform.position.z);
             thisCamera.orthographicSize = 5f; // Adjust camera size for cutscene
             return;
         }
-        else if (aOR_Script.isDeciding && Vector2.Distance(secondBoss.transform.position, player.transform.position) < 5f)
+        else if (aOR_Script.IsDeciding && Vector2.Distance(secondBoss.transform.position, player.transform.position) < 5f)
         {
             transform.position = new Vector3(0, 11.75f, transform.position.z);
             thisCamera.orthographicSize = 5f; // Adjust camera size for decision screen

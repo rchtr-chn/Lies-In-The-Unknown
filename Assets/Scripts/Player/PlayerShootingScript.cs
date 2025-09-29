@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,12 +47,12 @@ public class PlayerShootingScript : MonoBehaviour
 
     public void Shoot(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed && !pauseMenuScript.isPaused)
+        if (ctx.performed && !pauseMenuScript.IsPaused)
         {
             if (bulletPrefab)
             {
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-                audioManager.PlaySfx(audioManager.playerAttackSfx);
+                audioManager.PlaySfx(audioManager.PlayerAttackSfx);
             }
             else
             {

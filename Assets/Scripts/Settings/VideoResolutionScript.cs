@@ -1,48 +1,45 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class VideoResolutionScript : MonoBehaviour
 {
-    public Resolution[] resolutions;
-    public List<string> resolutionOptions = new List<string>();
-    int currentResolution;
-    public Text resolutionText;
+    public Resolution[] Resolutions;
+    public List<string> ResolutionOptions = new List<string>();
+    private int _currentResolution;
+    public Text ResolutionText;
 
     private void Start()
     {
         // Get all available resolutions
-        resolutions = Screen.resolutions;
+        Resolutions = Screen.resolutions;
 
         // Populate the resolution options list
-        foreach(Resolution res in resolutions)
+        foreach(Resolution res in Resolutions)
         {
             // Check if the resolution is already in the list to avoid duplicates
             string resolutionString = $"{res.width} x {res.height}";
-            if (!resolutionOptions.Contains(resolutionString))
+            if (!ResolutionOptions.Contains(resolutionString))
             {
-                resolutionOptions.Add(resolutionString);
+                ResolutionOptions.Add(resolutionString);
             }
         }
 
         //int resCount = resolutions.Length;
-        currentResolution = PlayerPrefs.GetInt("Resolution", resolutions.Length-1);
-        Debug.Log(resolutionOptions.Count);
-        SetNewResolution(currentResolution);
+        _currentResolution = PlayerPrefs.GetInt("Resolution", Resolutions.Length-1);
+        Debug.Log(ResolutionOptions.Count);
+        SetNewResolution(_currentResolution);
     }
 
     public void ChangeResolution()
     {
-        currentResolution = (currentResolution + 1) % resolutions.Length;
-        SetNewResolution(currentResolution);
+        _currentResolution = (_currentResolution + 1) % Resolutions.Length;
+        SetNewResolution(_currentResolution);
     }
 
     void SetNewResolution(int index)
     {
-        Screen.SetResolution(resolutions[index].width, resolutions[index].height, Screen.fullScreenMode);
-        resolutionText.text = $"{resolutions[index].width} x {resolutions[index].height}";
+        Screen.SetResolution(Resolutions[index].width, Resolutions[index].height, Screen.fullScreenMode);
+        ResolutionText.text = $"{Resolutions[index].width} x {Resolutions[index].height}";
     }
 }

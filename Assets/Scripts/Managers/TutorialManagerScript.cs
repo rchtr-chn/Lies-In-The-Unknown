@@ -1,33 +1,32 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TutorialManagerScript : MonoBehaviour
 {
-    public GameObject[] tutorialObjects;
-    Coroutine tutorialCoroutine;
-    Coroutine fadeCoroutine;
-    readonly float fadeDuration = 1.5f;
-    public GameObject blackImage;
+    public GameObject[] TutorialObjects;
+    private Coroutine _tutorialCoroutine;
+    private Coroutine _fadeCoroutine;
+    private readonly float fadeDuration = 1.5f;
+    public GameObject BlackImage;
 
-    AudioManagerScript audioManager;
+    private AudioManagerScript _audioManager;
 
     private void Awake()
     {
-        if(blackImage == null)
+        if(BlackImage == null)
         {
-            blackImage = GameObject.Find("BlackImage");
+            BlackImage = GameObject.Find("BlackImage");
         }
-        blackImage.SetActive(false); // Ensure the black image is initially inactive
-        if (tutorialObjects.Length == 0)
+        BlackImage.SetActive(false); // Ensure the black image is initially inactive
+        if (TutorialObjects.Length == 0)
         {
             Debug.LogError("No tutorial objects assigned in the inspector.");
         }
         else
         {
-            foreach (GameObject obj in tutorialObjects)
+            foreach (GameObject obj in TutorialObjects)
             {
                 obj.SetActive(false); // Ensure all tutorial objects are initially inactive
             }
@@ -35,12 +34,12 @@ public class TutorialManagerScript : MonoBehaviour
     }
     void Start()
     {
-        if(audioManager == null)
+        if(_audioManager == null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
 
-        tutorialCoroutine = StartCoroutine(TutorialCoroutine());
+        _tutorialCoroutine = StartCoroutine(TutorialCoroutine());
     }
 
     IEnumerator TutorialCoroutine()
@@ -49,7 +48,7 @@ public class TutorialManagerScript : MonoBehaviour
         Debug.Log("Tutorial started");
         // Add your tutorial logic here
 
-        tutorialObjects[0].SetActive(true);
+        TutorialObjects[0].SetActive(true);
         bool aPressed = false;
         bool dPressed = false;
         while (!aPressed || !dPressed)
@@ -66,12 +65,12 @@ public class TutorialManagerScript : MonoBehaviour
             }
             yield return null; // Wait for the next frame
         }
-        tutorialObjects[0].SetActive(false);
+        TutorialObjects[0].SetActive(false);
         Debug.Log("Movement keys pressed, proceeding to next step");
 
         yield return new WaitForSeconds(1f);
 
-        tutorialObjects[1].SetActive(true);
+        TutorialObjects[1].SetActive(true);
         bool spacePressed = false;
         while (!spacePressed)
         {
@@ -82,12 +81,12 @@ public class TutorialManagerScript : MonoBehaviour
             }
             yield return null; // Wait for the next frame
         }
-        tutorialObjects[1].SetActive(false);
+        TutorialObjects[1].SetActive(false);
         Debug.Log("Jump key pressed, proceeding to next step");
 
         yield return new WaitForSeconds(1f);
 
-        tutorialObjects[2].SetActive(true);
+        TutorialObjects[2].SetActive(true);
         bool lMBPressed = false;
         while (!lMBPressed)
         {
@@ -98,12 +97,12 @@ public class TutorialManagerScript : MonoBehaviour
             }
             yield return null; // Wait for the next frame
         }
-        tutorialObjects[2].SetActive(false);
+        TutorialObjects[2].SetActive(false);
         Debug.Log("Left Mouse Button pressed, proceeding to next step");
 
         yield return new WaitForSeconds(1f);
 
-        tutorialObjects[3].SetActive(true);
+        TutorialObjects[3].SetActive(true);
         bool ePressed = false;
         bool qPressed = false;
         while (!ePressed || !qPressed)
@@ -120,20 +119,20 @@ public class TutorialManagerScript : MonoBehaviour
             }
             yield return null; // Wait for the next frame
         }
-        tutorialObjects[3].SetActive(false);
+        TutorialObjects[3].SetActive(false);
         Debug.Log("Interaction keys pressed, proceeding to next step");
 
 
         yield return new WaitForSeconds(3.5f);
 
-        blackImage.SetActive(true); // Activate the black image for fade effect
-        fadeCoroutine = StartCoroutine(FadeImage(0f, 1f)); // Fade to black
+        BlackImage.SetActive(true); // Activate the black image for fade effect
+        _fadeCoroutine = StartCoroutine(FadeImage(0f, 1f)); // Fade to black
         Debug.Log("Tutorial ended");
     }
 
     public IEnumerator FadeImage(float fromAlpha, float toAlpha)
     {
-        Image targetImage = blackImage.GetComponent<Image>();
+        Image targetImage = BlackImage.GetComponent<Image>();
 
         yield return new WaitForSeconds(0.5f); // Wait before starting the fade
 
@@ -154,13 +153,13 @@ public class TutorialManagerScript : MonoBehaviour
         color.a = toAlpha;
         targetImage.color = color;
         yield return new WaitForSeconds(1f); // Wait before loading the next scene
-        if (fadeCoroutine != null)
+        if (_fadeCoroutine != null)
         {
-            StopCoroutine(fadeCoroutine);
-            fadeCoroutine = null; // Reset coroutine reference
+            StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null; // Reset coroutine reference
         }
 
-        audioManager.musicSource.Stop();
+        _audioManager.MusicSource.Stop();
         SceneManager.LoadScene("Post-Tutorial-Cutscene");
     }
 }

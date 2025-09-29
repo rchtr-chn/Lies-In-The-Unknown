@@ -7,123 +7,123 @@ using UnityEngine.Video;
 
 public class LevelManagerScript : MonoBehaviour
 {
-    public GameObject levelOne;
-    public GameObject levelTwo;
-    public GameObject firstBoss;
-    public GameObject secondBoss;
+    public GameObject LevelOne;
+    public GameObject LevelTwo;
+    public GameObject FirstBoss;
+    public GameObject SecondBoss;
 
-    public GameObject levelOneBG;
+    public GameObject LevelOneBG;
 
-    public GameObject blackImage;
-    public float fadeDuration = 1.5f;
-    Coroutine fadeCoroutine;
+    public GameObject BlackImage;
+    public float FadeDuration = 1.5f;
+    private Coroutine _fadeCoroutine;
 
-    public Slider bossHealthBar;
-    public Slider bossShieldBar;
-    public Slider playerHealthBar;
+    public Slider BossHealthBar;
+    public Slider BossShieldBar;
+    public Slider PlayerHealthBar;
 
-    public Transform playerTransform;
+    public Transform PlayerTransform;
 
-    public AudioManagerScript audioManager;
-    public GameObject dialogueManager;
+    public AudioManagerScript AudioManager;
+    public GameObject DialogueManager;
 
-    Coroutine cutsceneCoroutine;
-    public GameObject cutSceneDisplay;
-    public GameObject cutSceneOBJ;
+    private Coroutine _cutsceneCoroutine;
+    public GameObject CutsceneDisplay;
+    public GameObject CutsceneOBJ;
 
 
     private void Awake()
     {
-        if(dialogueManager == null)
+        if(DialogueManager == null)
         {
-            dialogueManager = GameObject.Find("DialogueManager");
+            DialogueManager = GameObject.Find("DialogueManager");
         }
-        if (audioManager == null && GameObject.Find("AudioManager") != null)
+        if (AudioManager == null && GameObject.Find("AudioManager") != null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            AudioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
-        if (levelOneBG == null)
+        if (LevelOneBG == null)
         {
-            levelOneBG = GameObject.Find("background-1");
+            LevelOneBG = GameObject.Find("background-1");
         }
-        if (blackImage == null)
+        if (BlackImage == null)
         {
-            blackImage = GameObject.Find("BlackImage");
+            BlackImage = GameObject.Find("BlackImage");
         }
-        blackImage.SetActive(false); // Ensure the black image is initially inactive
+        BlackImage.SetActive(false); // Ensure the black image is initially inactive
     }
 
     private void Start()
     {
-        if(playerTransform == null)
+        if(PlayerTransform == null)
         {
-            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         }
-        playerTransform.position = new Vector2(0, -1.5f);
+        PlayerTransform.position = new Vector2(0, -1.5f);
 
-        levelOne.SetActive(true);
-        firstBoss.SetActive(true);
+        LevelOne.SetActive(true);
+        FirstBoss.SetActive(true);
 
 
 
-        audioManager.musicSource.Stop();
-        audioManager.musicSource.clip = audioManager.levelOneBGM;
-        audioManager.musicSource.loop = true;
-        audioManager.musicSource.Play();
+        AudioManager.MusicSource.Stop();
+        AudioManager.MusicSource.clip = AudioManager.LevelOneBGM;
+        AudioManager.MusicSource.loop = true;
+        AudioManager.MusicSource.Play();
     }
 
     public void CutscenePostOni()
     {
-        audioManager.musicSource.Stop();
-        cutSceneDisplay.SetActive(true);
-        cutSceneOBJ.SetActive(true);
+        AudioManager.MusicSource.Stop();
+        CutsceneDisplay.SetActive(true);
+        CutsceneOBJ.SetActive(true);
 
-        cutSceneOBJ.GetComponent<VideoPlayer>().loopPointReached += OnVideoEnd;
+        CutsceneOBJ.GetComponent<VideoPlayer>().loopPointReached += OnVideoEnd;
     }
 
     void OnVideoEnd(VideoPlayer vp)
     {
-        cutSceneDisplay.SetActive(false);
-        cutSceneOBJ.SetActive(false);
+        CutsceneDisplay.SetActive(false);
+        CutsceneOBJ.SetActive(false);
         InitiateSecondLevel();
     }
 
     public void InitiateSecondLevel()
     {
-        audioManager.musicSource.Stop();
-        audioManager.musicSource.clip = audioManager.levelTwoBGM;
-        audioManager.musicSource.loop = true;
-        audioManager.musicSource.Play();
+        AudioManager.MusicSource.Stop();
+        AudioManager.MusicSource.clip = AudioManager.LevelTwoBGM;
+        AudioManager.MusicSource.loop = true;
+        AudioManager.MusicSource.Play();
 
-        levelOneBG.SetActive(false);
+        LevelOneBG.SetActive(false);
         UpdateBossHealthBar();
         UpdatePlayerHealthBar();
 
-        blackImage.SetActive(true);
+        BlackImage.SetActive(true);
 
-        playerTransform.position = new Vector2(0, -1.5f);
+        PlayerTransform.position = new Vector2(0, -1.5f);
 
-        levelOne.SetActive(false);
-        levelTwo.SetActive(true);
-        secondBoss.SetActive(true);
+        LevelOne.SetActive(false);
+        LevelTwo.SetActive(true);
+        SecondBoss.SetActive(true);
 
-        fadeCoroutine = StartCoroutine(FadeImage(1f, 0f));
+        _fadeCoroutine = StartCoroutine(FadeImage(1f, 0f));
 
-        dialogueManager.SetActive(true); // Activate the dialogue manager for level two
+        DialogueManager.SetActive(true); // Activate the dialogue manager for level two
     }
 
     public IEnumerator FadeImage(float fromAlpha, float toAlpha)
     {
-        Image targetImage = blackImage.GetComponent<Image>();
+        Image targetImage = BlackImage.GetComponent<Image>();
 
         yield return new WaitForSeconds(0.5f); // Wait before starting the fade
 
         float elapsed = 0f;
         Color color = targetImage.color;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < FadeDuration)
         {
-            float alpha = Mathf.Lerp(fromAlpha, toAlpha, elapsed / fadeDuration);
+            float alpha = Mathf.Lerp(fromAlpha, toAlpha, elapsed / FadeDuration);
             color.a = alpha;
             targetImage.color = color;
 
@@ -134,44 +134,44 @@ public class LevelManagerScript : MonoBehaviour
         // Ensure final value is exact
         color.a = toAlpha;
         targetImage.color = color;
-        blackImage.SetActive(false); // Disable the black image after fading out
-        if (fadeCoroutine != null)
+        BlackImage.SetActive(false); // Disable the black image after fading out
+        if (_fadeCoroutine != null)
         {
-            StopCoroutine(fadeCoroutine);
-            fadeCoroutine = null; // Reset coroutine reference
+            StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null; // Reset coroutine reference
         }
     }
 
     void UpdateBossHealthBar()
     {
-        if (bossHealthBar == null)
+        if (BossHealthBar == null)
         {
-            bossHealthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
+            BossHealthBar = GameObject.Find("boss-healthBar").GetComponent<Slider>();
         }
-        if (bossShieldBar == null)
+        if (BossShieldBar == null)
         {
-            bossShieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
+            BossShieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
 
-        BossHealthManager bossHealthScript = secondBoss.GetComponent<BossHealthManager>();
+        BossHealthManager bossHealthScript = SecondBoss.GetComponent<BossHealthManager>();
 
-        bossHealthBar.maxValue = bossHealthScript.maxHealth;
-        bossShieldBar.maxValue = bossHealthScript.maxShield;
-        bossHealthBar.value = bossHealthBar.maxValue;
-        bossShieldBar.value = bossShieldBar.maxValue;
+        BossHealthBar.maxValue = bossHealthScript.MaxHealth;
+        BossShieldBar.maxValue = bossHealthScript.MaxShield;
+        BossHealthBar.value = BossHealthBar.maxValue;
+        BossShieldBar.value = BossShieldBar.maxValue;
 
         Debug.Log("Boss health and shield bars updated.");
     }
 
     void UpdatePlayerHealthBar()
     {
-        if (playerHealthBar == null)
+        if (PlayerHealthBar == null)
         {
-            playerHealthBar = GameObject.Find("player-healthBar").GetComponent<Slider>();
+            PlayerHealthBar = GameObject.Find("player-healthBar").GetComponent<Slider>();
         }
-        PlayerHealthManager playerHealthScript = playerTransform.GetComponent<PlayerHealthManager>();
-        playerHealthBar.maxValue = playerHealthScript.maxHealth;
-        playerHealthBar.value = playerHealthScript.maxHealth;
+        PlayerHealthManager playerHealthScript = PlayerTransform.GetComponent<PlayerHealthManager>();
+        PlayerHealthBar.maxValue = playerHealthScript.maxHealth;
+        PlayerHealthBar.value = playerHealthScript.maxHealth;
         Debug.Log("Player health bar updated.");
     }
 

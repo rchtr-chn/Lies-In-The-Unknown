@@ -1,29 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuScript : MonoBehaviour
 {
-    public GameObject pauseMenuUI;
-    public GameObject settingsMenuUI;
-    public bool isPaused = false;
-    public bool isSettingsOpen = false;
+    public GameObject PauseMenuUI;
+    public GameObject SettingsMenuUI;
+    public bool IsPaused = false;
+    public bool IsSettingsOpen = false;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !isSettingsOpen)
+        if (Input.GetKeyDown(KeyCode.Escape) && !IsSettingsOpen)
         {
-            if (pauseMenuUI.activeInHierarchy)
+            if (PauseMenuUI.activeInHierarchy)
             {
-                isPaused = false;
-                pauseMenuUI.SetActive(false);
+                IsPaused = false;
+                PauseMenuUI.SetActive(false);
                 Time.timeScale = 1f; // Resume the game
             }
             else
             {
-                isPaused = true;
-                pauseMenuUI.SetActive(true);
+                IsPaused = true;
+                PauseMenuUI.SetActive(true);
                 Time.timeScale = 0f; // Pause the game
             }
         }
@@ -31,22 +29,22 @@ public class PauseMenuScript : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
+        PauseMenuUI.SetActive(false);
         Time.timeScale = 1f; // Resume the game
     }
     public void Settings()
     {
-        if(isSettingsOpen)
+        if(IsSettingsOpen)
         {
-            pauseMenuUI.SetActive(true);
-            settingsMenuUI.SetActive(false);
-            isSettingsOpen = false;
+            PauseMenuUI.SetActive(true);
+            SettingsMenuUI.SetActive(false);
+            IsSettingsOpen = false;
         }
         else
         {
-            pauseMenuUI.SetActive(false);
-            settingsMenuUI.SetActive(true);
-            isSettingsOpen = true;
+            PauseMenuUI.SetActive(false);
+            SettingsMenuUI.SetActive(true);
+            IsSettingsOpen = true;
         }
     }
 

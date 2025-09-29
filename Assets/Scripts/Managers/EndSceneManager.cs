@@ -1,31 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 
 public class EndSceneManager : MonoBehaviour
 {
-    AudioManagerScript audioManager;
-    public GameObject cutSceneDisplay;
-    public GameObject cutSceneOBJ;
+    private AudioManagerScript _audioManager;
+    public GameObject CutsceneDisplay;
+    public GameObject CutsceneOBJ;
 
     private void Start()
     {
-        if(audioManager == null && GameObject.Find("AudioManager") != null)
+        if(_audioManager == null && GameObject.Find("AudioManager") != null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
-        audioManager.musicSource.Stop();
-        cutSceneDisplay.SetActive(true);
-        cutSceneOBJ.SetActive(true);
+        _audioManager.MusicSource.Stop();
+        CutsceneDisplay.SetActive(true);
+        CutsceneOBJ.SetActive(true);
 
-        cutSceneOBJ.GetComponent<VideoPlayer>().loopPointReached += OnVideoEnd;
+        CutsceneOBJ.GetComponent<VideoPlayer>().loopPointReached += OnVideoEnd;
     }
     void OnVideoEnd(VideoPlayer vp)
     {
-        cutSceneDisplay.SetActive(false);
-        cutSceneOBJ.SetActive(false);
+        CutsceneDisplay.SetActive(false);
+        CutsceneOBJ.SetActive(false);
     }
 
     public void QuitGame()

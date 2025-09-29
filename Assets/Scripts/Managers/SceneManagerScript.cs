@@ -5,28 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagerScript : MonoBehaviour
 {
-    public GameObject startMenuUI;
-    public GameObject settingsUI;
-    bool isSettingsOpen = false;
+    public GameObject StartMenuUI;
+    public GameObject SettingsUI;
+    private bool _isSettingsOpen = false;
 
-    AudioManagerScript audioManager;
+    private AudioManagerScript _audioManager;
 
     private void Awake()
     {
         if (GameObject.Find("AudioManager") != null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
         else
         {
             Debug.LogError("AudioManager not found in the scene.");
         }
 
-        if (settingsUI == null)
+        if (SettingsUI == null)
         {
-            settingsUI = GameObject.Find("settings-canvas");
+            SettingsUI = GameObject.Find("settings-canvas");
         }
-        settingsUI.SetActive(false); // Ensure the settings UI is initially inactive
+        SettingsUI.SetActive(false); // Ensure the settings UI is initially inactive
     }
 
     public void StartGame()
@@ -36,9 +36,9 @@ public class SceneManagerScript : MonoBehaviour
     }
     public void OpenSettings()
     {
-        startMenuUI.SetActive(isSettingsOpen);
-        settingsUI.SetActive(!isSettingsOpen);
-        isSettingsOpen = !isSettingsOpen;
+        StartMenuUI.SetActive(_isSettingsOpen);
+        SettingsUI.SetActive(!_isSettingsOpen);
+        _isSettingsOpen = !_isSettingsOpen;
     }
     public void QuitGame()
     {

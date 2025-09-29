@@ -1,26 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SettingsMenuScript : MonoBehaviour
 {
-    public GameObject settingsMenuUI;
-    public PauseMenuScript pauseMenuScript;
-    public static SettingsMenuScript instance;
+    public GameObject SettingsMenuUI;
+    public PauseMenuScript PauseMenuScript;
+    public static SettingsMenuScript Instance;
 
     //string targetScene = "You-Win-Cutscene";
     //string targetScene2 = "You-Lose-Cutscene";
     private void Awake()
     {
-        if (settingsMenuUI == null)
+        if (SettingsMenuUI == null)
         {
-            settingsMenuUI = GameObject.Find("start-menu-settings");
+            SettingsMenuUI = GameObject.Find("start-menu-settings");
         }
 
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -33,7 +31,7 @@ public class SettingsMenuScript : MonoBehaviour
     {
         if(scene.name == "Tutorial")
         {
-            settingsMenuUI.SetActive(true); // Ensure the settings menu is inactive when a new scene is loaded
+            SettingsMenuUI.SetActive(true); // Ensure the settings menu is inactive when a new scene is loaded
         }
     }
     //void OnDestroy()

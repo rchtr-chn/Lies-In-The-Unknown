@@ -1,26 +1,25 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class VideoWindowModeScript : MonoBehaviour
 {
-    public List<string> windowModes = new List<string> { "Windowed", "Borderless", "Fullscreen" };
-    string currentWindowMode;
-    public Text windowModeText;
+    public List<string> WindowModes = new List<string> { "Windowed", "Borderless", "Fullscreen" };
+    private string _currentWindowMode;
+    public Text WindowModeText;
     void Start()
     {
         //gets playerprefs for saved window mode and sets it initially
-        currentWindowMode = PlayerPrefs.GetString("WindowMode", "Fullscreen");
-        windowModeText.text = currentWindowMode;
-        SetWindowMode(currentWindowMode);
+        _currentWindowMode = PlayerPrefs.GetString("WindowMode", "Fullscreen");
+        WindowModeText.text = _currentWindowMode;
+        SetWindowMode(_currentWindowMode);
     }
 
     public void ChangeWindowMode()
     {
-        currentWindowMode = windowModes[(windowModes.IndexOf(currentWindowMode) + 1) % windowModes.Count];
-        windowModeText.text = currentWindowMode;
-        SetWindowMode(currentWindowMode);
+        _currentWindowMode = WindowModes[(WindowModes.IndexOf(_currentWindowMode) + 1) % WindowModes.Count];
+        WindowModeText.text = _currentWindowMode;
+        SetWindowMode(_currentWindowMode);
     }
 
     void SetWindowMode(string mode)

@@ -6,35 +6,35 @@ using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
 {
-    public GameObject blackImage;
-    AudioManagerScript audioManager;
-    float fadeDuration = 1.5f; // Duration for the fade effect
-    Coroutine fadeCoroutine;
+    public GameObject BlackImage;
+    private AudioManagerScript _audioManager;
+    private float _fadeDuration = 1.5f; // Duration for the fade effect
+    private Coroutine _fadeCoroutine;
     // Start is called before the first frame update
     void Start()
     {
-        if(audioManager == null)
+        if(_audioManager == null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
-        audioManager.musicSource.Stop();
-        audioManager.musicSource.clip = audioManager.gameOverBGM;
-        audioManager.musicSource.loop = false;
-        audioManager.musicSource.Play();
-        fadeCoroutine = StartCoroutine(FadeImage(1f, 0f)); // Start fading in the black image
+        _audioManager.MusicSource.Stop();
+        _audioManager.MusicSource.clip = _audioManager.GameOverBGM;
+        _audioManager.MusicSource.loop = false;
+        _audioManager.MusicSource.Play();
+        _fadeCoroutine = StartCoroutine(FadeImage(1f, 0f)); // Start fading in the black image
     }
     public IEnumerator FadeImage(float fromAlpha, float toAlpha)
     {
-        Image targetImage = blackImage.GetComponent<Image>();
+        Image targetImage = BlackImage.GetComponent<Image>();
 
         yield return new WaitForSeconds(0.5f); // Wait before starting the fade
 
         float elapsed = 0f;
         Color color = targetImage.color;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < _fadeDuration)
         {
-            float alpha = Mathf.Lerp(fromAlpha, toAlpha, elapsed / fadeDuration);
+            float alpha = Mathf.Lerp(fromAlpha, toAlpha, elapsed / _fadeDuration);
             color.a = alpha;
             targetImage.color = color;
 
@@ -45,11 +45,11 @@ public class GameOverManager : MonoBehaviour
         // Ensure final value is exact
         color.a = toAlpha;
         targetImage.color = color;
-        blackImage.SetActive(false); // Disable the black image after fading out
-        if (fadeCoroutine != null)
+        BlackImage.SetActive(false); // Disable the black image after fading out
+        if (_fadeCoroutine != null)
         {
-            StopCoroutine(fadeCoroutine);
-            fadeCoroutine = null; // Reset coroutine reference
+            StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null; // Reset coroutine reference
         }
     }
     public void QuitGame()

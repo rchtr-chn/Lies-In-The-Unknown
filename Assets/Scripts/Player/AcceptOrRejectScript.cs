@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class AcceptOrRejectScript : MonoBehaviour
 {
-    public bool isDeciding = false;
-    public bool isAccepted = false;
+    public bool IsDeciding = false;
+    public bool IsAccepted = false;
     //public void Accept(InputAction.CallbackContext ctx)
     //{
     //    if(ctx.performed && isDeciding)

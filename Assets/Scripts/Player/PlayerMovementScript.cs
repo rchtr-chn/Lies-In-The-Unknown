@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -73,7 +70,7 @@ public class PlayerMovementScript : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
-            audioManager.PlaySfx(audioManager.playerJumpSfx);
+            audioManager.PlaySfx(audioManager.PlayerJumpSfx);
 
             isGrounded = false;
         }
@@ -95,7 +92,7 @@ public class PlayerMovementScript : MonoBehaviour
             if (intervalTimer > sfxInterval)
             {
                 intervalTimer = 0f;
-                audioManager.PlaySfx(audioManager.playerRunSfx);
+                audioManager.PlaySfx(audioManager.PlayerRunSfx);
             }
         }
         else

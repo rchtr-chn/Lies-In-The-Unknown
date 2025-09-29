@@ -5,52 +5,51 @@ using UnityEngine;
 
 public class ExplosionExpandHitboxScript : MonoBehaviour
 {
-    public BoxCollider2D boxCollider;
-    public Vector2 targetSize = new Vector2(4f, 4f);
-    public float duration = 2f;
-    public float explosionDamage = 5f;
+    public BoxCollider2D BoxCollider;
+    public Vector2 TargetHitboxSize = new Vector2(4f, 4f);
+    public float ExpansionDuration = 2f;
+    public float ExplosionDamage = 5f;
 
-    BossHealthManager bossHealthManager;
-
-    AudioManagerScript audioManager;
+    private BossHealthManager _bossHealthManager;
+    private AudioManagerScript _audioManager;
 
     private void Start()
     {
-        if (!audioManager && GameObject.Find("AudioManager") != null)
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+        if (!_audioManager && GameObject.Find("AudioManager") != null)
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
 
-        if (!bossHealthManager)
-            bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
+        if (!_bossHealthManager)
+            _bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
 
-        if (!boxCollider)
-            boxCollider = GetComponent<BoxCollider2D>();
+        if (!BoxCollider)
+            BoxCollider = GetComponent<BoxCollider2D>();
 
         StartCoroutine(ExpandOverTime());
-        audioManager.PlaySfx(audioManager.firstBossAttackSfx); // Play explosion sound effect
+        _audioManager.PlaySfx(_audioManager.FirstBossAttackSfx); // Play explosion sound effect
     }
 
     private void Update()
     {
-        if(bossHealthManager.isEnraged)
+        if(_bossHealthManager.isEnraged)
         {
-            explosionDamage = 10f; // Increase explosion damage when the boss is enraged
+            ExplosionDamage = 10f; // Increase explosion damage when the boss is enraged
         }
     }
 
     private IEnumerator ExpandOverTime()
     {
-        Vector2 startSize = boxCollider.size;
+        Vector2 startSize = BoxCollider.size;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < ExpansionDuration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-            boxCollider.size = Vector2.Lerp(startSize, targetSize, t);
+            float t = elapsed / ExpansionDuration;
+            BoxCollider.size = Vector2.Lerp(startSize, TargetHitboxSize, t);
             yield return null;
         }
 
-        boxCollider.size = targetSize; // Ensure final size
+        BoxCollider.size = TargetHitboxSize; // Ensure final size
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -61,7 +60,7 @@ public class ExplosionExpandHitboxScript : MonoBehaviour
             if (playerHealthManager != null)
             {
                 // Assuming the explosion deals full damage
-                playerHealthManager.TakeDamage(Mathf.FloorToInt(explosionDamage));
+                playerHealthManager.TakeDamage(Mathf.FloorToInt(ExplosionDamage));
             }
         }
     }

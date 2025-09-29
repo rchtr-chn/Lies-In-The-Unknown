@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 3886161218977951188}
   - component: {fileID: 8586495707193434370}
   m_Layer: 5
-  m_Name: screenSpace-camera-canvas
+  m_Name: StaminaBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

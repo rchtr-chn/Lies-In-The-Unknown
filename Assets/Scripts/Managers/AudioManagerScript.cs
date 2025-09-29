@@ -7,45 +7,45 @@ using UnityEngine.UI;
 public class AudioManagerScript : MonoBehaviour
 {
     [Header("---------------------- Audio Source ----------------------")]
-    public AudioSource musicSource;
-    public AudioSource effectSource;
+    public AudioSource MusicSource;
+    public AudioSource EffectSource;
 
 
     [Header("----------------------- Audio Clip -----------------------")]
-    public AudioClip firstBossMoveSfx;
-    public AudioClip firstBossAttackSfx;
-    public AudioClip playerJumpSfx;
-    public AudioClip playerRejectSfx;
-    public AudioClip playerRunSfx;
-    public AudioClip playerAttackSfx;
-    public AudioClip playerAcceptsSfx;
-    public AudioClip secondBossTeleportSfx;
-    public AudioClip secondBossAttackSfx;
-    public AudioClip shieldBreakSfx;
+    public AudioClip FirstBossMoveSfx;
+    public AudioClip FirstBossAttackSfx;
+    public AudioClip PlayerJumpSfx;
+    public AudioClip PlayerRejectSfx;
+    public AudioClip PlayerRunSfx;
+    public AudioClip PlayerAttackSfx;
+    public AudioClip PlayerAcceptsSfx;
+    public AudioClip SecondBossTeleportSfx;
+    public AudioClip SecondBossAttackSfx;
+    public AudioClip ShieldBreakSfx;
 
-    public AudioClip carHornSfx;
-    public AudioClip carCrashSfx;
+    public AudioClip CarHornSfx;
+    public AudioClip CarCrashSfx;
 
     [Header("----------------------- BGM Clips -----------------------")]
-    public AudioClip startMenuBGM;
-    public AudioClip levelOneBGM;
-    public AudioClip levelTwoBGM;
+    public AudioClip StartMenuBGM;
+    public AudioClip LevelOneBGM;
+    public AudioClip LevelTwoBGM;
     public AudioClip Ending;
-    public AudioClip gameOverBGM;
+    public AudioClip GameOverBGM;
 
     [Header("----------------------- Audio Slider -----------------------")]
-    public AudioMixer audioMixer;
-    public Slider masterSlider;
-    public Slider musicSlider;
-    public Slider effectSlider;
+    public AudioMixer AudioMixer;
+    public Slider MasterSlider;
+    public Slider MusicSlider;
+    public Slider EffectSlider;
 
-    public static AudioManagerScript instance;
+    public static AudioManagerScript Instance;
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -56,34 +56,34 @@ public class AudioManagerScript : MonoBehaviour
 
     private void Start()
     {
-        musicSource.clip = startMenuBGM;
-        musicSource.loop = true;
-        musicSource.Play();
+        MusicSource.clip = StartMenuBGM;
+        MusicSource.loop = true;
+        MusicSource.Play();
     }
     public void SetMasterVolume()
     {
-        Debug.Log("Setting Master Volume: " + masterSlider.value);
-        float volume = masterSlider.value;
-        audioMixer.SetFloat("Master", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
+        Debug.Log("Setting Master Volume: " + MasterSlider.value);
+        float volume = MasterSlider.value;
+        AudioMixer.SetFloat("Master", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
     }
 
     public void SetEffectVolume()
     {
-        float volume = effectSlider.value;
-        audioMixer.SetFloat("Effects", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
+        float volume = EffectSlider.value;
+        AudioMixer.SetFloat("Effects", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
     }
 
     public void SetMusicVolume()
     {
-        float volume = musicSlider.value;
-        audioMixer.SetFloat("Music", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
+        float volume = MusicSlider.value;
+        AudioMixer.SetFloat("Music", Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20);
     }
 
     public void PlaySfx(AudioClip clip)
     {
-        if (effectSource != null && clip != null)
+        if (EffectSource != null && clip != null)
         {
-            effectSource.PlayOneShot(clip);
+            EffectSource.PlayOneShot(clip);
         }
         else
         {
@@ -93,9 +93,9 @@ public class AudioManagerScript : MonoBehaviour
 
     public void StopMusic()
     {
-        if (musicSource != null)
+        if (MusicSource != null)
         {
-            musicSource.Stop();
+            MusicSource.Stop();
         }
         else
         {

@@ -6,28 +6,28 @@ using UnityEngine.SceneManagement;
 
 public class PreTutorialSceneManager : MonoBehaviour
 {
-    public VideoPlayer vPlayer;
-    AudioManagerScript audioManager;
+    public VideoPlayer VideoPlayer;
+    private AudioManagerScript _audioManager;
 
     private void Start()
     {
-        if(audioManager == null)
+        if(_audioManager == null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
 
-        if (vPlayer != null)
+        if (VideoPlayer != null)
         {
-            vPlayer = GameObject.Find("VideoPlayerObject").GetComponent<VideoPlayer>();
+            VideoPlayer = GameObject.Find("VideoPlayerObject").GetComponent<VideoPlayer>();
 
-            vPlayer.loopPointReached += OnVideoEnd;
+            VideoPlayer.loopPointReached += OnVideoEnd;
         }
 
     }
 
     void OnVideoEnd(VideoPlayer vp)
     {
-        audioManager.musicSource.Play();
+        _audioManager.MusicSource.Play();
         SceneManager.LoadScene("Gameplay");
     }
 }

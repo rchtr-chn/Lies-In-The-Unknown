@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5953491184897668783}
   - component: {fileID: 2015701089661973227}
   m_Layer: 0
-  m_Name: Oni-bullet-explosion
+  m_Name: EnemyBulletExplosion
   m_TagString: Enemy_Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,3 +168,4 @@ MonoBehaviour:
   boxCollider: {fileID: 5953491184897668783}
   targetSize: {x: 4, y: 4}
   duration: 1
+  explosionDamage: 5

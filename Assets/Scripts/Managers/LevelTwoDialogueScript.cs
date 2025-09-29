@@ -6,94 +6,94 @@ using UnityEngine.UI;
 
 public class LevelTwoDialogueScript : MonoBehaviour
 {
-    public TMP_Text dialogueText;
-    Coroutine dialogueCoroutine;
-    public BossHealthManager bossHealthManager;
+    public TMP_Text DialogueText;
+    private Coroutine _dialogueCoroutine;
+    public BossHealthManager BossHealthManager;
 
-    bool dialogue50Percent = false;
-    bool dialogue25Percent = false;
+    private bool _dialogueAtHalfHP = false;
+    private bool _dialogueAtQuarterHP = false;
 
     void Awake()
     {
-        if(!dialogueText)
+        if(!DialogueText)
         {
-            dialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
+            DialogueText = GameObject.Find("DialogueText").GetComponent<TMP_Text>();
             return;
         }
     }
 
     void Start()
     {
-        if (bossHealthManager == null && GameObject.Find("BossHealthManager") != null)
+        if (BossHealthManager == null && GameObject.Find("BossHealthManager") != null)
         {
-            bossHealthManager = GameObject.Find("Unknown-boss").GetComponent<BossHealthManager>();
+            BossHealthManager = GameObject.Find("Unknown-boss").GetComponent<BossHealthManager>();
         }
 
-        dialogueText.gameObject.SetActive(true);
-        dialogueCoroutine = StartCoroutine(InitialDialogue());
+        DialogueText.gameObject.SetActive(true);
+        _dialogueCoroutine = StartCoroutine(InitialDialogue());
     }
 
     private void Update()
     {
-        if(bossHealthManager.health <= 50 && !dialogue50Percent)
+        if(BossHealthManager.Health <= 50 && !_dialogueAtHalfHP)
         {
-            dialogueCoroutine = StartCoroutine(On50PercentDialogue());
-            dialogue50Percent = true;
+            _dialogueCoroutine = StartCoroutine(On50PercentDialogue());
+            _dialogueAtHalfHP = true;
         }
-        if (bossHealthManager.health <= 25 && !dialogue25Percent && dialogue50Percent)
+        if (BossHealthManager.Health <= 25 && !_dialogueAtQuarterHP && _dialogueAtHalfHP)
         {
-            dialogueCoroutine = StartCoroutine(On25PercentDialogue());
-            dialogue25Percent = true;
+            _dialogueCoroutine = StartCoroutine(On25PercentDialogue());
+            _dialogueAtQuarterHP = true;
         }
     }
 
     IEnumerator InitialDialogue()
     {
-        dialogueText.text = "No.. You're not!!";
-        dialogueText.color = Color.white;
+        DialogueText.text = "No.. You're not!!";
+        DialogueText.color = Color.white;
         yield return new WaitForSeconds(4f);
-        dialogueText.text = "";
+        DialogueText.text = "";
 
         yield return null;
-        dialogueCoroutine = null;
+        _dialogueCoroutine = null;
     }
 
     IEnumerator On50PercentDialogue()
     {
-        dialogueText.text = "You think you can redeem yourself by beating me?";
-        dialogueText.color = Color.red;
+        DialogueText.text = "You think you can redeem yourself by beating me?";
+        DialogueText.color = Color.red;
         yield return new WaitForSeconds(3f);
-        dialogueText.text = "You'll suffer a never-ending painful death inside your own mind!";
+        DialogueText.text = "You'll suffer a never-ending painful death inside your own mind!";
         yield return new WaitForSeconds(3f);
-        dialogueText.text = "So we're inside my own conciousness..?";
-        dialogueText.color = Color.white;
+        DialogueText.text = "So we're inside my own conciousness..?";
+        DialogueText.color = Color.white;
         yield return new WaitForSeconds(3f);
-        dialogueText.text = "";
+        DialogueText.text = "";
 
         yield return null;
-        dialogueCoroutine = null;
+        _dialogueCoroutine = null;
     }
 
     IEnumerator On25PercentDialogue()
     {
-        dialogueText.text = "How can I end this nightmare..";
-        dialogueText.color = Color.white;
+        DialogueText.text = "How can I end this nightmare..";
+        DialogueText.color = Color.white;
         yield return new WaitForSeconds(3f);
-        dialogueText.text = "Should I really just accept my fate..";
+        DialogueText.text = "Should I really just accept my fate..";
         yield return new WaitForSeconds(3f);
-        dialogueText.text = "";
+        DialogueText.text = "";
 
         yield return null;
-        dialogueCoroutine = null;
+        _dialogueCoroutine = null;
     }
 
     public void OnAOR()
     {
-        dialogueText.text = "You're pathetic.";
+        DialogueText.text = "You're pathetic.";
     }
 
     public void OffAOR()
     {
-        dialogueText.text = "";
+        DialogueText.text = "";
     }
 }

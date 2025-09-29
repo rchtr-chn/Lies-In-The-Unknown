@@ -1,111 +1,109 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UnknownEnemyBehaviorscript : MonoBehaviour
 {
-    public Vector2 rangeA;
-    public Vector2 rangeB;
+    public Vector2 MinTeleportRange;
+    public Vector2 MaxTeleportRange;
 
-    public Sprite barrageBulletSprite;
-    public GameObject barrageBulletPrefab; // Prefab for the barrage bullet
-    public GameObject acceptOrRejectGroup;
+    public Sprite BarrageBulletSprite;
+    public GameObject BarrageBulletPrefab; // Prefab for the barrage bullet
+    public GameObject AcceptOrRejectGroup;
 
-    public SpriteRenderer spriteRenderer;
-    public SpriteRenderer[] barrageSpritePlaceholder;
-    public Transform[] barrageAttackSpawnPos;
+    public SpriteRenderer SpriteRenderer;
+    public SpriteRenderer[] BarrageSpritePlaceholder;
+    public Transform[] BarrageAttackSpawnPos;
 
-    public float intervalBetweenTeleports = 10f;
-    public float attackCooldown = 3f;
-    public int barrageCount = 1;
-    Coroutine teleportCoroutine;
-    Coroutine fadeCoroutine;
-    Coroutine barrageCoroutine;
-    Coroutine stunCoroutine; // Coroutine for handling stun effect
+    public float IntervalBetweenTeleports = 10f;
+    public float AttackCooldown = 3f;
+    public int BarrageCount = 1;
+    private Coroutine _teleportCoroutine;
+    private Coroutine _fadeCoroutine;
+    private Coroutine _barrageCoroutine;
+    private Coroutine _stunCoroutine; // Coroutine for handling stun effect
 
-    public float stunDuration = 5f; // Duration of the stun effect
-    bool isStunned = false; // Flag to check if the enemy is stunned
-    bool isFading = false; // Flag to check if the enemy is currently fading
-    bool isEnraged = false; // Flag to check if the enemy is enraged
+    public float StunDuration = 5f; // Duration of the stun effect
+    private bool _isStunned = false; // Flag to check if the enemy is stunned
+    private  bool _isFading = false; // Flag to check if the enemy is currently fading
+    private bool _isEnraged = false; // Flag to check if the enemy is enraged
 
-    public float elapsedTime = 0f;
-    public float fadeDuration = 1f;
-    bool fadeOut = true; // Set to true for fade out, false for fade in
+    public float ElapsedTime = 0f;
+    public float FadeDuration = 1f;
+    private bool _fadeOut = true; // Set to true for fade out, false for fade in
 
-    BossHealthManager bossHealthManager;
-    Slider shieldBar;
+    private BossHealthManager _bossHealthManager;
+    private Slider _bossShieldBar;
 
-    AudioManagerScript audioManager;
-    bool lastShieldQueue = false; // Track the last shield state to avoid unnecessary updates
+    private AudioManagerScript _audioManager;
+    private bool _lastShieldQueue = false; // Track the last shield state to avoid unnecessary updates
 
-    AcceptOrRejectScript aOR_Script; // Reference to the AcceptOrRejectScript for handling player decisions
-    public LevelTwoDialogueScript levelTwoDialogueScript; // Reference to the LevelTwoDialogueScript for handling dialogues
+    private AcceptOrRejectScript _acceptRejectScript; // Reference to the AcceptOrRejectScript for handling player decisions
+    public LevelTwoDialogueScript LevelTwoDialogueScript; // Reference to the LevelTwoDialogueScript for handling dialogues
 
-    Animator animator; // Reference to the Animator for handling animations
+    private Animator _animator; // Reference to the Animator for handling animations
 
     private void Start()
     {
-        if (!animator)
+        if (!_animator)
         {
-            animator = GetComponent<Animator>();
+            _animator = GetComponent<Animator>();
         }
-        if (!audioManager && GameObject.Find("AudioManager") != null)
+        if (!_audioManager && GameObject.Find("AudioManager") != null)
         {
-            audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
+            _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManagerScript>();
         }
-        if (!bossHealthManager)
+        if (!_bossHealthManager)
         {
-            bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
+            _bossHealthManager = GameObject.FindGameObjectWithTag("Enemy_boss").GetComponent<BossHealthManager>();
         }
-        if(!shieldBar)
+        if(!_bossShieldBar)
         {
-            shieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
-        }
-
-        if (!spriteRenderer)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            _bossShieldBar = GameObject.Find("boss-shieldBar").GetComponent<Slider>();
         }
 
-        teleportCoroutine = StartCoroutine(TeleportRandomly());
+        if (!SpriteRenderer)
+        {
+            SpriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        _teleportCoroutine = StartCoroutine(TeleportRandomly());
     }
 
     void Update()
     {
-        if(isStunned)
+        if(_isStunned)
         {
-            if (fadeCoroutine == null && spriteRenderer.color.a < 1f)
+            if (_fadeCoroutine == null && SpriteRenderer.color.a < 1f)
             {
-                fadeOut = true; // Set to true for fade out before stun
-                fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+                _fadeOut = true; // Set to true for fade out before stun
+                _fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
             }
             return; // Skip the rest of the update if stunned
         }
 
-        if (!isStunned && barrageCoroutine == null)
+        if (!_isStunned && _barrageCoroutine == null)
         {
-            barrageCoroutine = StartCoroutine(BarrageAttack());
+            _barrageCoroutine = StartCoroutine(BarrageAttack());
         }
 
-        if(bossHealthManager.health <= bossHealthManager.enragedMinimum && !bossHealthManager.isEnraged)
+        if(_bossHealthManager.Health <= _bossHealthManager.EnragedMinimumHP && !_bossHealthManager.isEnraged)
         {
             Debug.Log("Boss is enraged!");
-            bossHealthManager.isEnraged = true;
+            _bossHealthManager.isEnraged = true;
             Enraged(); // Call the method to handle enraged state
         }
 
-        if (bossHealthManager.shield <= 0 && !isStunned && stunCoroutine == null && !isEnraged)
+        if (_bossHealthManager.Shield <= 0 && !_isStunned && _stunCoroutine == null && !_isEnraged)
         {
-            stunCoroutine = StartCoroutine(StunEnemy(stunDuration));
+            _stunCoroutine = StartCoroutine(StunEnemy(StunDuration));
         }
         
-        if (bossHealthManager.health <= 10f)
+        if (_bossHealthManager.Health <= 10f)
         {
-            animator.SetBool("isEnraged", false); // Trigger enraged animations when health is low
-            stunCoroutine = StartCoroutine(StunEnragedEnemy());
+            _animator.SetBool("isEnraged", false); // Trigger enraged animations when health is low
+            _stunCoroutine = StartCoroutine(StunEnragedEnemy());
         }
     }
 
@@ -114,17 +112,17 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
         while (true)
         {
             // Wait for the specified interval before teleporting
-            yield return new WaitForSeconds(intervalBetweenTeleports);
+            yield return new WaitForSeconds(IntervalBetweenTeleports);
             // Generate a random position within the defined ranges
-            float randomX = Random.Range(rangeA.x, rangeB.x);
-            float randomY = Random.Range(rangeA.y, rangeB.y);
+            float randomX = Random.Range(MinTeleportRange.x, MaxTeleportRange.x);
+            float randomY = Random.Range(MinTeleportRange.y, MaxTeleportRange.y);
             Vector2 randomPosition = new Vector2(randomX, randomY);
 
-            isFading = true; // Set to true to indicate fading is in progress
-            fadeOut = true; // Set to true for fade out before teleporting
-            fadeCoroutine = StartCoroutine(FadeSprite());
+            _isFading = true; // Set to true to indicate fading is in progress
+            _fadeOut = true; // Set to true for fade out before teleporting
+            _fadeCoroutine = StartCoroutine(FadeSprite());
 
-            while (fadeCoroutine != null)
+            while (_fadeCoroutine != null)
             {
                 // Wait until the fade coroutine is finished before teleporting
                 yield return null;
@@ -135,131 +133,131 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
 
             yield return new WaitForSeconds(0.5f);
 
-            fadeOut = false; // Set to false for fade in after teleporting
-            fadeCoroutine = StartCoroutine(FadeSprite());
-            isFading = false; // Reset fading flag
+            _fadeOut = false; // Set to false for fade in after teleporting
+            _fadeCoroutine = StartCoroutine(FadeSprite());
+            _isFading = false; // Reset fading flag
         }
     }
 
     IEnumerator StunEnemy(float stunDuration)
     {
-        isStunned = true;
+        _isStunned = true;
 
-        if (barrageCoroutine != null)
+        if (_barrageCoroutine != null)
         {
-            StopCoroutine(barrageCoroutine);
-            barrageCoroutine = null; // Reset barrage coroutine reference
-            foreach (SpriteRenderer sr in barrageSpritePlaceholder)
+            StopCoroutine(_barrageCoroutine);
+            _barrageCoroutine = null; // Reset barrage coroutine reference
+            foreach (SpriteRenderer sr in BarrageSpritePlaceholder)
             {
                 sr.sprite = null; // Clear barrage sprites when stunned
             }
         }
-        if(teleportCoroutine != null)
+        if(_teleportCoroutine != null)
         {
-            StopCoroutine(teleportCoroutine);
-            if(spriteRenderer.color.a < 1f)
+            StopCoroutine(_teleportCoroutine);
+            if(SpriteRenderer.color.a < 1f)
             {
-                fadeOut = true; // Set to true for fade out before stun
-                fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+                _fadeOut = true; // Set to true for fade out before stun
+                _fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
             }
-            teleportCoroutine = null; // Reset teleport coroutine reference
+            _teleportCoroutine = null; // Reset teleport coroutine reference
         }
-        audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
+        _audioManager.PlaySfx(_audioManager.ShieldBreakSfx); // Play shield break sound effect
 
         yield return new WaitForSeconds(stunDuration);
-        isStunned = false;
-        teleportCoroutine = StartCoroutine(TeleportRandomly()); // Restart teleport coroutine after stun
-        shieldBar.value = bossHealthManager.shield = bossHealthManager.maxShield; // Restore shield after stun
+        _isStunned = false;
+        _teleportCoroutine = StartCoroutine(TeleportRandomly()); // Restart teleport coroutine after stun
+        _bossShieldBar.value = _bossHealthManager.Shield = _bossHealthManager.MaxShield; // Restore shield after stun
         Debug.Log("Oni is no longer stunned.");
 
-        stunCoroutine = null; // Reset stun coroutine reference
+        _stunCoroutine = null; // Reset stun coroutine reference
     }
 
     IEnumerator StunEnragedEnemy()
     {
-        isStunned = true; // Set the stunned flag to true
+        _isStunned = true; // Set the stunned flag to true
 
-        if (barrageCoroutine != null)
+        if (_barrageCoroutine != null)
         {
-            StopCoroutine(barrageCoroutine);
-            barrageCoroutine = null; // Reset barrage coroutine reference
-            foreach (SpriteRenderer sr in barrageSpritePlaceholder)
+            StopCoroutine(_barrageCoroutine);
+            _barrageCoroutine = null; // Reset barrage coroutine reference
+            foreach (SpriteRenderer sr in BarrageSpritePlaceholder)
             {
                 sr.sprite = null; // Clear barrage sprites when stunned
             }
         }
-        if (teleportCoroutine != null)
+        if (_teleportCoroutine != null)
         {
-            StopCoroutine(teleportCoroutine);
-            teleportCoroutine = null; // Reset teleport coroutine reference
+            StopCoroutine(_teleportCoroutine);
+            _teleportCoroutine = null; // Reset teleport coroutine reference
         }
-        if (fadeCoroutine != null)
+        if (_fadeCoroutine != null)
         {
-            StopCoroutine(fadeCoroutine);
-            fadeCoroutine = null; // Reset fade coroutine reference
-            fadeOut = true; // Set to true for fade out before stun
-            fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
+            StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null; // Reset fade coroutine reference
+            _fadeOut = true; // Set to true for fade out before stun
+            _fadeCoroutine = StartCoroutine(FadeSprite()); // Start fading in immediately
         }
         transform.position = new Vector2(0, 11.75f); // Move the enemy to a specific position when stunned
-        if(!lastShieldQueue)
+        if(!_lastShieldQueue)
         {
-            audioManager.PlaySfx(audioManager.shieldBreakSfx); // Play shield break sound effect
+            _audioManager.PlaySfx(_audioManager.ShieldBreakSfx); // Play shield break sound effect
         }
-        lastShieldQueue = true; // Set the last shield state to true to avoid unnecessary updates
+        _lastShieldQueue = true; // Set the last shield state to true to avoid unnecessary updates
         Collider2D col = GameObject.Find("unknown-collider").GetComponent<Collider2D>();
         col.enabled = false;
 
-        if(!aOR_Script)
+        if(!_acceptRejectScript)
         {
-            aOR_Script = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
+            _acceptRejectScript = GameObject.Find("Player").GetComponent<AcceptOrRejectScript>();
         }
 
-        aOR_Script.isDeciding = true; // Set the deciding flag to true to allow player to accept or reject
+        _acceptRejectScript.IsDeciding = true; // Set the deciding flag to true to allow player to accept or reject
 
-        while (aOR_Script.isDeciding)
+        while (_acceptRejectScript.IsDeciding)
         {
             if (Vector2.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) < 5f)
             {
-                acceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
-                levelTwoDialogueScript.OnAOR(); // Trigger the accept or reject dialogue
+                AcceptOrRejectGroup.SetActive(true); // Show the accept or reject UI group
+                LevelTwoDialogueScript.OnAOR(); // Trigger the accept or reject dialogue
             }
             else
             {
-                levelTwoDialogueScript.OffAOR(); // Turn off the accept or reject dialogue if player is too far
-                acceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
+                LevelTwoDialogueScript.OffAOR(); // Turn off the accept or reject dialogue if player is too far
+                AcceptOrRejectGroup.SetActive(false); // Hide the accept or reject UI group if player is too far
             }
 
             if(Input.GetKey(KeyCode.Q))
             {
-                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
-                aOR_Script.isAccepted = true; // Set the accepted flag to true
+                _acceptRejectScript.IsDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+                _acceptRejectScript.IsAccepted = true; // Set the accepted flag to true
             }
             else if (Input.GetKey(KeyCode.E))
             {
-                aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
-                aOR_Script.isAccepted = false; // Set the accepted flag to false
+                _acceptRejectScript.IsDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+                _acceptRejectScript.IsAccepted = false; // Set the accepted flag to false
             }
 
                 Debug.Log("is deciding");
             yield return null; // Wait for the next frame while the player is deciding
         }
 
-        acceptOrRejectGroup.SetActive(false);
-        aOR_Script.isDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
+        AcceptOrRejectGroup.SetActive(false);
+        _acceptRejectScript.IsDeciding = false; // Set the deciding flag to false to stop accepting or rejecting
 
         yield return null;
-        isStunned = false; // Reset the stunned flag
+        _isStunned = false; // Reset the stunned flag
         col.enabled = true; // Re-enable the collider after the stun effect
-        stunCoroutine = null; // Reset stun coroutine reference
+        _stunCoroutine = null; // Reset stun coroutine reference
 
         LevelManagerScript levelManager = GameObject.Find("GameManager").GetComponent<LevelManagerScript>();
 
-        if (!aOR_Script.isDeciding && aOR_Script.isAccepted)
+        if (!_acceptRejectScript.IsDeciding && _acceptRejectScript.IsAccepted)
         {
             //Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
             SceneManager.LoadScene("You-Win-Cutscene");
         }
-        if (!aOR_Script.isDeciding && !aOR_Script.isAccepted)
+        if (!_acceptRejectScript.IsDeciding && !_acceptRejectScript.IsAccepted)
         {
             //Destroy(gameObject); // Destroy the enemy if the player accepts the cutscene
             //levelManager.RejectCutscene();
@@ -270,71 +268,71 @@ public class UnknownEnemyBehaviorscript : MonoBehaviour
     IEnumerator FadeSprite()
     {
         float elapsed = 0f;
-        Color startColor = spriteRenderer.color;
+        Color startColor = SpriteRenderer.color;
         float startAlpha = startColor.a;
-        float endAlpha = fadeOut ? 0f : 1f;
+        float endAlpha = _fadeOut ? 0f : 1f;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < FadeDuration)
         {
             elapsed += Time.deltaTime;
-            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
-            spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / FadeDuration);
+            SpriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, newAlpha);
             yield return null;
         }
 
         // Ensure final alpha is set
-        spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, endAlpha);
-        fadeCoroutine = null; // Reset fade coroutine reference
+        SpriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, endAlpha);
+        _fadeCoroutine = null; // Reset fade coroutine reference
     }
 
     IEnumerator BarrageAttack()
     {
-        yield return new WaitForSeconds(attackCooldown); // Initial delay before starting the barrage attack
+        yield return new WaitForSeconds(AttackCooldown); // Initial delay before starting the barrage attack
 
-        foreach (SpriteRenderer sr in barrageSpritePlaceholder)
+        foreach (SpriteRenderer sr in BarrageSpritePlaceholder)
         {
             // Set the sprite for the barrage attack
-            sr.sprite = barrageBulletSprite;
+            sr.sprite = BarrageBulletSprite;
             // Wait for a short duration before moving to the next sprite
-            if(isEnraged == false)
+            if(_isEnraged == false)
             {
                 yield return new WaitForSeconds(0.7f);
             }
         }
 
-        while(isFading)
+        while(_isFading)
         {
             // Wait until the fade coroutine is finished before proceeding with the barrage attack
             yield return null;
         }
 
 
-        for(int i=0; i < barrageCount; i++)
+        for(int i=0; i < BarrageCount; i++)
         {
             int index = 0;
 
-            foreach (Transform spawnPos in barrageAttackSpawnPos)
+            foreach (Transform spawnPos in BarrageAttackSpawnPos)
             {
                 // Instantiate the barrage attack at the spawn position
-                GameObject bullet = Instantiate(barrageBulletPrefab, spawnPos.position, spawnPos.rotation);
-                audioManager.PlaySfx(audioManager.firstBossAttackSfx); // Play barrage attack sound
-                barrageSpritePlaceholder[index].sprite = null;
+                GameObject bullet = Instantiate(BarrageBulletPrefab, spawnPos.position, spawnPos.rotation);
+                _audioManager.PlaySfx(_audioManager.FirstBossAttackSfx); // Play barrage attack sound
+                BarrageSpritePlaceholder[index].sprite = null;
                 index++;
             }
             yield return new WaitForSeconds(0.5f); // Wait before the next barrage attack
         }
 
         yield return null;
-        barrageCoroutine = null; // Reset barrage coroutine reference
+        _barrageCoroutine = null; // Reset barrage coroutine reference
     }
 
     void Enraged()
     {
-        animator.SetBool("isEnraged", true); // Set the animator parameter to trigger enraged animations
-        intervalBetweenTeleports = 5f; // Decrease teleport interval when enraged
-        attackCooldown = 2f; // Decrease attack cooldown when enraged
-        isEnraged = true; // Set the enraged flag to true
-        barrageCount = 2; // Increase barrage count when enraged
+        _animator.SetBool("isEnraged", true); // Set the animator parameter to trigger enraged animations
+        IntervalBetweenTeleports = 5f; // Decrease teleport interval when enraged
+        AttackCooldown = 2f; // Decrease attack cooldown when enraged
+        _isEnraged = true; // Set the enraged flag to true
+        BarrageCount = 2; // Increase barrage count when enraged
     }
 
 }

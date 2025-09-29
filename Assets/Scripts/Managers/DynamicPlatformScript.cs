@@ -4,40 +4,40 @@ using UnityEngine;
 
 public class DynamicPlatformScript : MonoBehaviour
 {
-    public Transform pointA;
-    public Transform pointB;
-    public float speed = 2f;
-    public float waitTimeAtPoints = 1f;
-    Vector3 targetPosition;
-    bool movingToB = true;
-    Coroutine waitCoroutine;
+    public Transform PointA;
+    public Transform PointB;
+    public float Speed = 2f;
+    public float WaitTimeAtPoints = 1f;
+    private Vector3 _targetPosition;
+    private bool _movingToB = true;
+    private Coroutine _waitCoroutine;
 
     private void Update()
     {
-        if(movingToB)
+        if(_movingToB)
         {
-            targetPosition = pointB.position;
+            _targetPosition = PointB.position;
         }
         else
         {
-            targetPosition = pointA.position;
+            _targetPosition = PointA.position;
         }
         MoveToTarget();
     }
 
     void MoveToTarget()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        if(transform.position == targetPosition && waitCoroutine == null)
+        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Speed * Time.deltaTime);
+        if(transform.position == _targetPosition && _waitCoroutine == null)
         {
-            waitCoroutine = StartCoroutine(WaitAtPoint());
+            _waitCoroutine = StartCoroutine(WaitAtPoint());
         }
     }
 
     IEnumerator WaitAtPoint()
     {
-        yield return new WaitForSeconds(waitTimeAtPoints);
-        movingToB = !movingToB; // Toggle direction
-        waitCoroutine = null; // Reset coroutine reference
+        yield return new WaitForSeconds(WaitTimeAtPoints);
+        _movingToB = !_movingToB; // Toggle direction
+        _waitCoroutine = null; // Reset coroutine reference
     }
 }
