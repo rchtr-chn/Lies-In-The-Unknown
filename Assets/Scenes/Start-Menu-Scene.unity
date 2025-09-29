@@ -1083,8 +1083,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73d8c77f52d0b4489837cf627d6a1f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMenuUI: {fileID: 450896137}
-  settingsUI: {fileID: 1607268728084980505}
+  StartMenuUI: {fileID: 450896137}
+  SettingsUI: {fileID: 1607268728084980505}
 --- !u!4 &1455214891
 Transform:
   m_ObjectHideFlags: 0
@@ -1512,29 +1512,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3b251ce3a3ce6488786988ac858b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicSource: {fileID: 1702650754}
-  effectSource: {fileID: 2071905116}
-  firstBossMoveSfx: {fileID: 8300000, guid: f4a97a8bb03870a4089ad8fdffbf1486, type: 3}
-  firstBossAttackSfx: {fileID: 8300000, guid: caded3dd9cef7eb4da6df58a1d47a3e3, type: 3}
-  playerJumpSfx: {fileID: 8300000, guid: f532b7c1d0b21904cb830dcea216e8ce, type: 3}
-  playerRejectSfx: {fileID: 8300000, guid: a2a2a82737d6bb445a8aa9a5cb5f89eb, type: 3}
-  playerRunSfx: {fileID: 8300000, guid: 235b3907e976b984691b418c14e3ee1d, type: 3}
-  playerAttackSfx: {fileID: 8300000, guid: 79d18f32ae9a4e24eacb90a81ee0f532, type: 3}
-  playerAcceptsSfx: {fileID: 8300000, guid: 5dc890a1dca538544bb114d8cc21bdf4, type: 3}
-  secondBossTeleportSfx: {fileID: 8300000, guid: 843d2f0537ec4fd458c72f168e4ca171, type: 3}
-  secondBossAttackSfx: {fileID: 8300000, guid: dc1322f113e6ce749ac862e1c7801991, type: 3}
-  shieldBreakSfx: {fileID: 8300000, guid: 79d5b1feab3a17a4cbe0b01aaf1fbeca, type: 3}
-  carHornSfx: {fileID: 8300000, guid: 5541f2dd80895cd4c89d013b5b8751bd, type: 3}
-  carCrashSfx: {fileID: 8300000, guid: d19fa71b4471a3645b4f3a4cb0674f76, type: 3}
-  startMenuBGM: {fileID: 8300000, guid: e105f2140fb43454594f3e3d56e30895, type: 3}
-  levelOneBGM: {fileID: 8300000, guid: cc31840b77f11a243ad4c3668d347529, type: 3}
-  levelTwoBGM: {fileID: 8300000, guid: c6ae2b45fdaeb594c81c190bdaf68fd8, type: 3}
+  MusicSource: {fileID: 1702650754}
+  EffectSource: {fileID: 2071905116}
+  FirstBossMoveSfx: {fileID: 8300000, guid: f4a97a8bb03870a4089ad8fdffbf1486, type: 3}
+  FirstBossAttackSfx: {fileID: 8300000, guid: caded3dd9cef7eb4da6df58a1d47a3e3, type: 3}
+  PlayerJumpSfx: {fileID: 8300000, guid: 41e98c18ca7c97a43bd0d1219bc222f3, type: 3}
+  PlayerRejectSfx: {fileID: 8300000, guid: a2a2a82737d6bb445a8aa9a5cb5f89eb, type: 3}
+  PlayerRunSfx: {fileID: 8300000, guid: 235b3907e976b984691b418c14e3ee1d, type: 3}
+  PlayerAttackSfx: {fileID: 8300000, guid: 79d18f32ae9a4e24eacb90a81ee0f532, type: 3}
+  PlayerAcceptsSfx: {fileID: 8300000, guid: 5dc890a1dca538544bb114d8cc21bdf4, type: 3}
+  SecondBossTeleportSfx: {fileID: 8300000, guid: 843d2f0537ec4fd458c72f168e4ca171, type: 3}
+  SecondBossAttackSfx: {fileID: 8300000, guid: dc1322f113e6ce749ac862e1c7801991, type: 3}
+  ShieldBreakSfx: {fileID: 8300000, guid: 79d5b1feab3a17a4cbe0b01aaf1fbeca, type: 3}
+  CarHornSfx: {fileID: 8300000, guid: 5541f2dd80895cd4c89d013b5b8751bd, type: 3}
+  CarCrashSfx: {fileID: 8300000, guid: d19fa71b4471a3645b4f3a4cb0674f76, type: 3}
+  StartMenuBGM: {fileID: 8300000, guid: 0616fc17e04f7824f900126258e40de5, type: 3}
+  LevelOneBGM: {fileID: 8300000, guid: cc31840b77f11a243ad4c3668d347529, type: 3}
+  LevelTwoBGM: {fileID: 8300000, guid: c6ae2b45fdaeb594c81c190bdaf68fd8, type: 3}
   Ending: {fileID: 8300000, guid: c056dca5c1a72ad428ef8fee5f34f9b2, type: 3}
-  gameOverBGM: {fileID: 8300000, guid: 1048f7c3eec5cab4dab86a6f8548ee3c, type: 3}
-  audioMixer: {fileID: 24100000, guid: c948514a6035e5a41b7d33c79abf3da7, type: 2}
-  masterSlider: {fileID: 4727345693694939021}
-  musicSlider: {fileID: 8849812539008240330}
-  effectSlider: {fileID: 2402547991167309429}
+  GameOverBGM: {fileID: 8300000, guid: 1048f7c3eec5cab4dab86a6f8548ee3c, type: 3}
+  AudioMixer: {fileID: 24100000, guid: c948514a6035e5a41b7d33c79abf3da7, type: 2}
+  MasterSlider: {fileID: 4727345693694939021}
+  MusicSlider: {fileID: 8849812539008240330}
+  EffectSlider: {fileID: 2402547991167309429}
 --- !u!4 &1759707530
 Transform:
   m_ObjectHideFlags: 0
@@ -4314,11 +4314,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72a4ae4bb95698c42bf284ccf79526ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windowModes:
+  WindowModes:
   - Windowed
   - Borderless
   - Fullscreen
-  windowModeText: {fileID: 7964246941331832102}
+  WindowModeText: {fileID: 0}
 --- !u!224 &7563066510917674707
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4727,8 +4727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641415a3524669346aebe873766bb97e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolutionOptions: []
-  resolutionText: {fileID: 8798941295021640664}
+  ResolutionOptions: []
+  ResolutionText: {fileID: 0}
 --- !u!1 &8689471676138453208
 GameObject:
   m_ObjectHideFlags: 0

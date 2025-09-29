@@ -8,7 +8,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
 {
 
     public float BossSpeed = 5f;
-    public float MaxChaseDistance = 5f;
+    public float MaxChaseDistance = 10f;
 
     public float ElapsedTime = 0f;
     public float AttackCooldown = 1f;
@@ -114,6 +114,8 @@ public class OniEnemyBehaviorScript : MonoBehaviour
             float distanceBetweenEntity = Vector2.Distance(transform.position - (Vector3)_bossPosOffset, PlayerTransform.position);
             _playerPos = PlayerTransform.position;
 
+            Debug.Log("Distance to Player: " + distanceBetweenEntity);
+
             if (distanceBetweenEntity > MaxChaseDistance && !IsOnCutscene)
             {
                 ChasePlayer();
@@ -125,6 +127,7 @@ public class OniEnemyBehaviorScript : MonoBehaviour
             }
             else if (!_onCooldown && !IsOnCutscene)
             {
+                Debug.Log("Boss is attacking!");
                 _audioPlayed = false; // Reset to allow sound to play again
                 _attackCoroutine = StartCoroutine(StartAttack());
                 _onCooldown = true;

@@ -19,7 +19,8 @@ public class TutorialManagerScript : MonoBehaviour
         {
             BlackImage = GameObject.Find("BlackImage");
         }
-        BlackImage.SetActive(false); // Ensure the black image is initially inactive
+        BlackImage.SetActive(false);
+
         if (TutorialObjects.Length == 0)
         {
             Debug.LogError("No tutorial objects assigned in the inspector.");
@@ -28,7 +29,7 @@ public class TutorialManagerScript : MonoBehaviour
         {
             foreach (GameObject obj in TutorialObjects)
             {
-                obj.SetActive(false); // Ensure all tutorial objects are initially inactive
+                obj.SetActive(false);
             }
         }
     }

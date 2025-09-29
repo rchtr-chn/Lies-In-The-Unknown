@@ -50,7 +50,7 @@ public class LevelManagerScript : MonoBehaviour
         {
             BlackImage = GameObject.Find("BlackImage");
         }
-        BlackImage.SetActive(false); // Ensure the black image is initially inactive
+        BlackImage.SetActive(false);
     }
 
     private void Start()
