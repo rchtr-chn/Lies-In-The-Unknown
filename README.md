@@ -68,7 +68,7 @@ Or… (There's 2 ending)
 
 <h2>💡 My Contributions</h2>
 
-  I dedicated around 10 hours in total to this project., developing all of the mechanics that make the game function as intended, such as the player move and shoot mechanic, enemy AI/state machine, and scene manager.
+  I dedicated around 10 hours in total to this project, developing all of the mechanics that make the game function as intended, such as the player move and shoot mechanic, enemy AI/state machine, and scene manager.
 
 <h2>⬇️ Game Pages</h2>
   itch.io: https://rchtr-chn.itch.io/lies-in-the-unknown
